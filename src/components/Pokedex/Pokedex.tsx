@@ -1,17 +1,25 @@
-import { StyleSheet, Text, View, Image } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableWithoutFeedback,
+} from "react-native";
 import React from "react";
 import { COLORS, SIZES } from "../../../assets/consts/consts";
+import { PokedexLogic } from "./PokedexLogic";
 
 const Pokedex = () => {
+  const { getRandomPokemonLink, getRandomPokemon } = PokedexLogic();
   return (
     <View style={styles.container}>
-      <View style={styles.outsideContainer}>
+      {/* <View style={styles.outsideContainer}>
         <Image
           source={require("../../../assets/images/PokedexOutside.png")}
           resizeMode="contain"
           style={styles.outsidePokedex}
         />
-      </View>
+      </View> */}
       <View style={styles.flashIndicatorContainer}>
         <Image
           source={require("../../../assets/images/BlueIndicator.png")}
@@ -19,7 +27,10 @@ const Pokedex = () => {
           style={styles.flashIndicatorImage}
         />
       </View>
-      <View style={styles.greenButtonContainer}></View>
+      <TouchableWithoutFeedback onPress={getRandomPokemon}>
+        <View style={styles.greenButtonContainer}></View>
+      </TouchableWithoutFeedback>
+
       <Image
         source={require("../../../assets/images/Pokedex.png")}
         style={styles.insidePokedex}

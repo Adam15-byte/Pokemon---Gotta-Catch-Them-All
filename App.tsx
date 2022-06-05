@@ -8,6 +8,8 @@ import {
 import React from "react";
 import FontPreload from "./FontPreload";
 import { SIZES } from "./assets/consts/consts";
+// import { Provider } from "react-redux";
+// import { store } from "./src/features/store";
 
 export default function App() {
   type ImageBackgroundProps = DefaultImageBackground["props"] & {
@@ -18,6 +20,7 @@ export default function App() {
     return <DefaultImageBackground {...props} />;
   }
   return (
+    // <Provider store={store}>
     <MyBackground
       source={require("./assets/images/background.jpg")}
       resizeMode="cover"
@@ -25,6 +28,7 @@ export default function App() {
     >
       <FontPreload />
     </MyBackground>
+    // </Provider>
   );
 }
 

@@ -7,7 +7,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 import { FONTS } from "./assets/consts/consts";
-import { allPokemon } from "./assets/consts/data/allPokemon";
+import { allPokemon } from "./assets/data/allPokemon";
 import Pokedex from "./src/components/Pokedex/Pokedex";
 
 const FontPreload = () => {
@@ -38,17 +38,6 @@ const FontPreload = () => {
   if (!appIsReady) {
     return null;
   }
-  const generateRandomInRange = (min: number, max: number) => {
-    const difference = max - min;
-    let random = Math.random();
-    random = Math.floor(random * difference);
-    random += min;
-    return random;
-  };
-  const getRandomPokemonLink = () => {
-    const randomNumber = generateRandomInRange(1, 151);
-    console.log(allPokemon.results[randomNumber].url);
-  };
   return (
     <View style={styles.pokedexContainer}>
       <Pokedex />
