@@ -8,6 +8,7 @@ import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 import { FONTS } from "./assets/consts/consts";
 import { allPokemon } from "./assets/consts/data/allPokemon";
+import Pokedex from "./src/components/Pokedex/Pokedex";
 
 const FontPreload = () => {
   const [appIsReady, setAppIsReady] = useState<boolean>(false);
@@ -49,13 +50,8 @@ const FontPreload = () => {
     console.log(allPokemon.results[randomNumber].url);
   };
   return (
-    <View style={styles.container}>
-      <Text style={styles.textStyle}>
-        Open up App.tsx to start working on your app!
-      </Text>
-      <TouchableOpacity style={styles.button} onPress={getRandomPokemonLink}>
-        <Text>Get random pokemon</Text>
-      </TouchableOpacity>
+    <View style={styles.pokedexContainer}>
+      <Pokedex />
     </View>
   );
 };
@@ -63,20 +59,7 @@ const FontPreload = () => {
 export default FontPreload;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  textStyle: {
-    ...FONTS.h4,
-  },
-  button: {
-    width: "50%",
-    height: 100,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "red",
-    marginTop: 10,
+  pokedexContainer: {
+    paddingTop: 0,
   },
 });
