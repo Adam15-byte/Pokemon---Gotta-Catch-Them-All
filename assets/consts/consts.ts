@@ -19,3 +19,8 @@ export const FONTS = {
     fontFamily: "PressStart2P_400Regular",
   },
 };
+
+export const SIZES = {
+  SCREEN_WIDTH: width,
+  SCREEN_HEIGHT: height,
+};

@@ -1,27 +1,40 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from "expo-status-bar";
 import {
-  useFonts,
-  PressStart2P_400Regular,
-} from "@expo-google-fonts/press-start-2p";
-import React, { useState, useEffect, useCallback } from "react";
-import * as SplashScreen from "expo-splash-screen";
-import * as Font from "expo-font";
-import { FONTS } from "./assets/consts/consts";
+  StyleSheet,
+  Text,
+  View,
+  ImageBackground as DefaultImageBackground,
+} from "react-native";
+import React from "react";
 import FontPreload from "./FontPreload";
+import { SIZES } from "./assets/consts/consts";
 
 export default function App() {
-  return <FontPreload />;
+  type ImageBackgroundProps = DefaultImageBackground["props"] & {
+    children: React.ReactNode;
+  };
+
+  function MyBackground(props: ImageBackgroundProps) {
+    return <DefaultImageBackground {...props} />;
+  }
+  return (
+    <MyBackground
+      source={require("./assets/images/background.jpg")}
+      resizeMode="cover"
+      style={styles.imageBackground}
+    >
+      <FontPreload />
+    </MyBackground>
+  );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  imageBackground: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
+    width: SIZES.SCREEN_WIDTH,
+    height: SIZES.SCREEN_HEIGHT,
     justifyContent: "center",
-  },
-  textStyle: {
-    ...FONTS.h4,
+    alignItems: "center",
+    
   },
 });
