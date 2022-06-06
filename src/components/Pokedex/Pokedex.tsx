@@ -8,35 +8,57 @@ import {
 import React from "react";
 import { COLORS, SIZES } from "../../../assets/consts/consts";
 import { PokedexLogic } from "./PokedexLogic";
-import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue } from "react-native-reanimated";
-import { PanGestureHandler, PanGestureHandlerGestureEvent } from "react-native-gesture-handler";
+import Animated, {
+  interpolate,
+  useAnimatedGestureHandler,
+  useAnimatedStyle,
+  useSharedValue,
+} from "react-native-reanimated";
+import {
+  PanGestureHandler,
+  PanGestureHandlerGestureEvent,
+} from "react-native-gesture-handler";
 
 const Pokedex = () => {
   const { getRandomPokemonLink, getRandomPokemon } = PokedexLogic();
-  const translateX = useSharedValue(0)
-  const onGestureEvent = useAnimatedGestureHandler<PanGestureHandlerGestureEvent>({
-    onStart: () => {},
-    onActive: (event) => {
-      console.log(event.translationX)
-      translateX.value = event.translationX
-    },
-    onEnd: () => {},
-  })
+  const translateX = useSharedValue(0);
+  const onGestureEvent =
+    useAnimatedGestureHandler<PanGestureHandlerGestureEvent>({
+      onStart: (_, context) => {
+        context.x = translateX.value;
+      },
+      onActive: (event, context) => {
+        translateX.value = Math.min(
+          Math.max(event.translationX + context.x, 0),
+          SIZES.SCREEN_WIDTH / 1.3
+        );
+      },
+      onEnd: () => {},
+    });
 
   const animatedFlipStyle = useAnimatedStyle(() => {
+    const rotateY = interpolate(
+      translateX.value,
+      [0, SIZES.SCREEN_WIDTH],
+      [0, 10]
+    );
     return {
-      transform: [{translateX: translateX.value}]
-    }
-  })
+      transform: [
+        { perspective: 200 },
+        { translateX: translateX.value },
+        { rotateY: `${rotateY}deg` },
+      ],
+    };
+  });
   return (
     <View style={styles.container}>
       <PanGestureHandler onGestureEvent={onGestureEvent}>
         <Animated.View style={[styles.outsideContainer, animatedFlipStyle]}>
           <Image
-          source={require("../../../assets/images/PokedexOutside.png")}
-          resizeMode="contain"
-          style={styles.outsidePokedex}
-        />
+            source={require("../../../assets/images/PokedexOutside.png")}
+            resizeMode="contain"
+            style={styles.outsidePokedex}
+          />
         </Animated.View>
       </PanGestureHandler>
       <View style={styles.flashIndicatorContainer}>
