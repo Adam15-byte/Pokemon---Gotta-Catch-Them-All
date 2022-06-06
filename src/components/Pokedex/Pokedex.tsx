@@ -9,19 +9,21 @@ import React from "react";
 import { COLORS, SIZES } from "../../../assets/consts/consts";
 import { PokedexLogic } from "./PokedexLogic";
 import { FONTS } from "../../../assets/consts/consts";
+import Animated from "react-native-reanimated";
+import { PanGestureHandler } from "react-native-gesture-handler";
 
 const Pokedex = () => {
   const { getRandomPokemonLink, getRandomPokemon, pokemon, saveRandomPokemon } =
     PokedexLogic();
   return (
     <View style={styles.container}>
-      {/* <View style={styles.outsideContainer}>
+      <Animated.View style={styles.outsideContainer}>
         <Image
           source={require("../../../assets/images/PokedexOutside.png")}
           resizeMode="contain"
           style={styles.outsidePokedex}
         />
-      </View> */}
+      </Animated.View>
       <View style={styles.flashIndicatorContainer}>
         <Image
           source={require("../../../assets/images/BlueIndicator.png")}
