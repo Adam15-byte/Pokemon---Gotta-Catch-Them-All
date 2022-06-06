@@ -17,15 +17,15 @@ export const FONTS = {
     fontFamily: "PressStart2P_400Regular",
   },
   h2: {
-    fontSize: 20,
-    fontFamily: "PressStart2P_400Regular",
-  },
-  h3: {
     fontSize: 16,
     fontFamily: "PressStart2P_400Regular",
   },
-  h4: {
+  h3: {
     fontSize: 12,
+    fontFamily: "PressStart2P_400Regular",
+  },
+  h4: {
+    fontSize: 10,
     fontFamily: "PressStart2P_400Regular",
   },
 };
