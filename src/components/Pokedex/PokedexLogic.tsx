@@ -1,13 +1,8 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { useEffect } from "react";
+import React from "react";
 import { allPokemon } from "../../../assets/data/allPokemon";
-import { useSelector, useDispatch } from "react-redux";
-import { setNewPokemon } from "../../features/CurrentPokemonSlice";
-import { RootState } from "../../features/store";
 
 export const PokedexLogic = () => {
-  const pokemon = useSelector((state: RootState) => state.setNewPokemon);
-  const dispatch = useDispatch();
   const generateRandomInRange = (min: number, max: number) => {
     const difference = max - min;
     let random = Math.random();
@@ -24,20 +19,14 @@ export const PokedexLogic = () => {
       await fetch(getRandomPokemonLink(1, 151))
         .then((response) => response.json())
         .then((json) => {
-          dispatch(setNewPokemon(json));
+          console.log(json.sprites.front_default);
         });
     } catch (e) {
       console.log(e);
     }
   };
-  useEffect(() => {
-    console.log("New rolled pokemon: ", pokemon);
-  }, [pokemon]);
-  const saveRandomPokemon = () => {};
   return {
     getRandomPokemonLink,
     getRandomPokemon,
-    pokemon,
-    saveRandomPokemon,
   };
 };
