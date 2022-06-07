@@ -38,10 +38,13 @@ const Pokedex = () => {
         context.x = translateX.value;
       },
       onActive: (event, context) => {
-        translateX.value = Math.min(
-          Math.max(event.translationX + context.x, 0),
-          SIZES.SCREEN_WIDTH / 1.3
-        );
+        if (searchingStatus !== "searching") {
+          translateX.value = Math.min(
+            Math.max(event.translationX + context.x, 0),
+            SIZES.SCREEN_WIDTH / 1.3
+          );
+        }
+
       },
       onEnd: (event) => {
         if (event.translationX > 240) {
