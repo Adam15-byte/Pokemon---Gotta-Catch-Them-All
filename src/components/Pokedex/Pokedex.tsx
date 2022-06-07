@@ -46,13 +46,22 @@ const Pokedex = () => {
         }
       },
       onEnd: (event) => {
+        ////
+        // When swipe is large enough finish swipe automatically to largest value of swipe.
+        ////
         if (event.translationX > 240) {
           translateX.value = withTiming(SIZES.SCREEN_WIDTH / 1.3);
+          //Switch refresh to true
           runOnJS(refreshedToTrue)();
         }
+        ////
+        // When swipe is smaller than 240 get outside automatically to 0.
+        ////
         if (event.translationX <= 240) {
           translateX.value = withTiming(0);
+          //Fire only when searching is refreshed to prevent firing with "little swipes" that don't show the pokemon fully.
           if (searchingRefreshed === true) {
+            //Fire with delay to make sure that it renders after backside is fully swiped(closed)
             runOnJS(setTimeout)(refreshedToFalse, 1000);
             runOnJS(setTimeout)(getRandomPokemon, 500);
           }
@@ -60,6 +69,9 @@ const Pokedex = () => {
       },
     });
 
+  ////
+  // Animated style for backside to allow for swiping
+  ////
   const animatedFlipStyle = useAnimatedStyle(() => {
     const rotateY = interpolate(
       translateX.value,
@@ -76,6 +88,7 @@ const Pokedex = () => {
   });
   return (
     <View style={styles.container}>
+      {/* Outside "cover" of the pokedex. PanGesture to read user swipes and move it. */}
       <PanGestureHandler onGestureEvent={onGestureEvent}>
         <Animated.View style={[styles.outsideContainer, animatedFlipStyle]}>
           <Image
@@ -85,6 +98,9 @@ const Pokedex = () => {
           />
         </Animated.View>
       </PanGestureHandler>
+
+      {/* Flash indicator in top-right corner. Change of color comes from changing
+      images and is determined by current searching status. */}
       <View style={styles.flashIndicatorContainer}>
         {/* On opening of the app, the indicator is blue */}
         {searchingStatus === "" && (
@@ -118,6 +134,8 @@ const Pokedex = () => {
           resizeMode="contain"
         />
       </View>
+
+      {/* Info Tab that displays text with current searching condition */}
       <View style={styles.infoTabContainer}>
         <Text style={styles.infoTabText}>
           {searchingStatus === ""
@@ -134,16 +152,22 @@ const Pokedex = () => {
           style={styles.infoBar}
         />
       </View>
+
+      {/* Green button inside pokedex used for switching to catching mode */}
       <TouchableWithoutFeedback onPress={getRandomPokemon}>
         <View style={styles.greenButtonContainer}></View>
       </TouchableWithoutFeedback>
 
+      {/* Actuall Inside image of Pokedex */}
       <Image
         source={require("../../../assets/images/Pokedex1.png")}
         style={styles.insidePokedex}
         resizeMode="contain"
       />
+
+      {/* White Card inside pokedex that displays all the data */}
       <View style={styles.infoCardContainer}>
+        {/* Info screen shown on initial opening of pokedex */}
         {pokemon.id === null && (
           <View style={styles.welcomeContainer}>
             <Text style={styles.welcomeText}>Welcome!</Text>
@@ -155,6 +179,8 @@ const Pokedex = () => {
             </Text>
           </View>
         )}
+
+        {/* Display of data about found pokemon */}
         {pokemon.id !== null && (
           <>
             <View style={styles.nameContainer}>
