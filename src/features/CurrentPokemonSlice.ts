@@ -1,11 +1,11 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 export interface Pokemon {
   id: number | null;
   name: string;
   image: string;
-  stats: [];
-  types: [];
+  stats: [] | any;
+  types: [] | any;
 }
 
 const initialState: Pokemon = {
@@ -16,12 +16,19 @@ const initialState: Pokemon = {
   types: [],
 };
 
-export const currentPokemonSlice = createSlice({
-  name: "currentPokemonSlice",
+export const newPokemon = createSlice({
+  name: "newPokemon",
   initialState,
   reducers: {
-    setNewPokemon: (state, action: PayloadAction<Pokemon>) => {
+    setNewPokemon: (state, action) => {
+      state.id = action.payload.id;
       state.name = action.payload.name;
+      state.image = action.payload.sprites.front_default;
+      state.stats = action.payload.stats;
+      state.types = action.payload.types;
     },
   },
 });
+
+export const { setNewPokemon } = newPokemon.actions;
+export default newPokemon.reducer;
