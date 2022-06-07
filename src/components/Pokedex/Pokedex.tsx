@@ -44,7 +44,6 @@ const Pokedex = () => {
             SIZES.SCREEN_WIDTH / 1.3
           );
         }
-
       },
       onEnd: (event) => {
         if (event.translationX > 240) {
@@ -54,8 +53,8 @@ const Pokedex = () => {
         if (event.translationX <= 240) {
           translateX.value = withTiming(0);
           if (searchingRefreshed === true) {
+            runOnJS(setTimeout)(refreshedToFalse, 1000);
             runOnJS(setTimeout)(getRandomPokemon, 500);
-            runOnJS(refreshedToFalse)();
           }
         }
       },
@@ -80,13 +79,14 @@ const Pokedex = () => {
       <PanGestureHandler onGestureEvent={onGestureEvent}>
         <Animated.View style={[styles.outsideContainer, animatedFlipStyle]}>
           <Image
-            source={require("../../../assets/images/PokedexOutside.png")}
+            source={require("../../../assets/images/PokedexOutside1.png")}
             resizeMode="contain"
             style={styles.outsidePokedex}
           />
         </Animated.View>
       </PanGestureHandler>
       <View style={styles.flashIndicatorContainer}>
+        {/* On opening of the app, the indicator is blue */}
         {searchingStatus === "" && (
           <Image
             source={require("../../../assets/images/BlueIndicator.png")}
@@ -94,6 +94,7 @@ const Pokedex = () => {
             style={styles.flashIndicatorImage}
           />
         )}
+        {/* When searching for pokemon display red indicator */}
         {searchingStatus === "searching" && (
           <Image
             source={require("../../../assets/images/RedIndicator.png")}
@@ -101,6 +102,7 @@ const Pokedex = () => {
             style={styles.flashIndicatorImage}
           />
         )}
+        {/* When pokemon gets found display green indicator */}
         {searchingStatus === "found" && (
           <Image
             source={require("../../../assets/images/GreenIndicator.png")}
@@ -108,13 +110,36 @@ const Pokedex = () => {
             style={styles.flashIndicatorImage}
           />
         )}
+
+        {/* Indicator with tranparent background, to ensure the image does not pop in & out */}
+        <Image
+          source={require("../../../assets/images/TransparentIndicator.png")}
+          style={styles.transparentIndicator}
+          resizeMode="contain"
+        />
+      </View>
+      <View style={styles.infoTabContainer}>
+        <Text style={styles.infoTabText}>
+          {searchingStatus === ""
+            ? "Open Pokedex to begin"
+            : searchingStatus === "searching"
+            ? "Searching..."
+            : searchingStatus === "found" && searchingRefreshed === false
+            ? "Found!"
+            : "New Pokemon!"}
+        </Text>
+        <Image
+          source={require("../../../assets/images/InfoBar.png")}
+          resizeMode="contain"
+          style={styles.infoBar}
+        />
       </View>
       <TouchableWithoutFeedback onPress={getRandomPokemon}>
         <View style={styles.greenButtonContainer}></View>
       </TouchableWithoutFeedback>
 
       <Image
-        source={require("../../../assets/images/Pokedex.png")}
+        source={require("../../../assets/images/Pokedex1.png")}
         style={styles.insidePokedex}
         resizeMode="contain"
       />
@@ -237,6 +262,22 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
   },
+  transparentIndicator: {
+    zIndex: 19,
+    width: 70,
+    height: 70,
+    position: "absolute",
+  },
+  infoTabContainer: {
+    position: "absolute",
+    zIndex: 20,
+    top: SIZES.SCREEN_HEIGHT * 0.21,
+    width: 250,
+    height: 90,
+    alignSelf: "center",
+    alignItems: "center",
+    justifyContent: "center",
+  },
   infoCardContainer: {
     zIndex: 1,
     position: "absolute",
@@ -314,5 +355,16 @@ const styles = StyleSheet.create({
   welcomeTextSmaller: {
     ...FONTS.h3,
     marginTop: 15,
+  },
+  infoBar: {
+    width: "100%",
+    zIndex: 1,
+  },
+  infoTabText: {
+    position: "absolute",
+    zIndex: 2,
+    ...FONTS.h3,
+    marginHorizontal: 30,
+    textAlign: "center",
   },
 });
