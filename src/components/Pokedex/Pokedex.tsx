@@ -20,7 +20,8 @@ import {
 } from "react-native-gesture-handler";
 
 const Pokedex = () => {
-  const { getRandomPokemonLink, getRandomPokemon, pokemon } = PokedexLogic();
+  const { getRandomPokemonLink, getRandomPokemon, pokemon, searchingStatus } =
+    PokedexLogic();
   const translateX = useSharedValue(0);
   const onGestureEvent =
     useAnimatedGestureHandler<PanGestureHandlerGestureEvent>({
@@ -62,11 +63,27 @@ const Pokedex = () => {
         </Animated.View>
       </PanGestureHandler>
       <View style={styles.flashIndicatorContainer}>
-        <Image
-          source={require("../../../assets/images/BlueIndicator.png")}
-          resizeMode="contain"
-          style={styles.flashIndicatorImage}
-        />
+        {searchingStatus === "" && (
+          <Image
+            source={require("../../../assets/images/BlueIndicator.png")}
+            resizeMode="contain"
+            style={styles.flashIndicatorImage}
+          />
+        )}
+        {searchingStatus === "searching" && (
+          <Image
+            source={require("../../../assets/images/RedIndicator.png")}
+            resizeMode="contain"
+            style={styles.flashIndicatorImage}
+          />
+        )}
+        {searchingStatus === "found" && (
+          <Image
+            source={require("../../../assets/images/GreenIndicator.png")}
+            resizeMode="contain"
+            style={styles.flashIndicatorImage}
+          />
+        )}
       </View>
       <TouchableWithoutFeedback onPress={getRandomPokemon}>
         <View style={styles.greenButtonContainer}></View>
@@ -78,38 +95,67 @@ const Pokedex = () => {
         resizeMode="contain"
       />
       <View style={styles.infoCardContainer}>
-        {pokemon.id !== null &&         
-        <>
-        <View style={styles.nameContainer}>
-          <Text style={styles.nameText}>{pokemon.name}</Text>
+        {pokemon.id === null && (
+          <View style={styles.welcomeContainer}>
+            <Text style={styles.welcomeText}>Welcome!</Text>
+            <Text style={styles.welcomeTextSmaller}>
+              Currently you have 0 pokemon. Catch all 151 pokemon.
+            </Text>
+            <Text style={styles.welcomeTextSmaller}>
+              Close Pokedex to look for new pokemon.
+            </Text>
           </View>
-        <View style={styles.iconTypesContainer}>
-          <View style={styles.iconContainer}>
-            <Image source={{ uri: pokemon.image }} style={styles.pokemonImage} resizeMode="contain" />
-          </View>
-          <View style={styles.typesContainer}>
-            <Text style={styles.typeText}>{pokemon.types.length <= 1 ? "Type:" : "Types:"}</Text>
-            <Text style={styles.typeText}>{pokemon.types[0].type.name}</Text>
-            <Text style={styles.typeText}>{pokemon.types.length > 1 ? pokemon.types[1].type.name : null}</Text>
-          </View>
-        </View>
-        <View style={styles.statsContainer}>
-          <View style={styles.statsHeaderContainer}>
-            <Text style={styles.statsText}>Stats:</Text>
-          </View>
-          <View style={styles.flexDisplayRow}>
-            <View style={styles.statColumn}>
-              <Text style={styles.statsText}>hp: {pokemon.stats[0].base_stat}</Text>
-              <Text style={styles.statsText}>defense: {pokemon.stats[2].base_stat}</Text>
+        )}
+        {pokemon.id !== null && (
+          <>
+            <View style={styles.nameContainer}>
+              <Text style={styles.nameText}>{pokemon.name}</Text>
             </View>
-            <View style={styles.statColumn}>
-              <Text style={styles.statsText}>attack: {pokemon.stats[1].base_stat}</Text>
-              <Text style={styles.statsText}>speed: {pokemon.stats[5].base_stat}</Text>
+            <View style={styles.iconTypesContainer}>
+              <View style={styles.iconContainer}>
+                <Image
+                  source={{ uri: pokemon.image }}
+                  style={styles.pokemonImage}
+                  resizeMode="contain"
+                />
+              </View>
+              <View style={styles.typesContainer}>
+                <Text style={styles.typeText}>
+                  {pokemon.types.length <= 1 ? "Type:" : "Types:"}
+                </Text>
+                <Text style={styles.typeText}>
+                  {pokemon.types[0].type.name}
+                </Text>
+                <Text style={styles.typeText}>
+                  {pokemon.types.length > 1 ? pokemon.types[1].type.name : null}
+                </Text>
+              </View>
             </View>
-          </View>
-        </View>
-        </>
-        }
+            <View style={styles.statsContainer}>
+              <View style={styles.statsHeaderContainer}>
+                <Text style={styles.statsText}>Stats:</Text>
+              </View>
+              <View style={styles.flexDisplayRow}>
+                <View style={styles.statColumn}>
+                  <Text style={styles.statsText}>
+                    hp: {pokemon.stats[0].base_stat}
+                  </Text>
+                  <Text style={styles.statsText}>
+                    defense: {pokemon.stats[2].base_stat}
+                  </Text>
+                </View>
+                <View style={styles.statColumn}>
+                  <Text style={styles.statsText}>
+                    attack: {pokemon.stats[1].base_stat}
+                  </Text>
+                  <Text style={styles.statsText}>
+                    speed: {pokemon.stats[5].base_stat}
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </>
+        )}
       </View>
     </View>
   );
@@ -180,19 +226,19 @@ const styles = StyleSheet.create({
     flex: 0.15,
     width: "100%",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   nameText: {
-    ...FONTS.h2
+    ...FONTS.h2,
   },
   iconTypesContainer: {
     flexDirection: "row",
     flex: 0.4,
     width: "100%",
-    marginTop: 10
+    marginTop: 10,
   },
   statsContainer: {
-    flex: 0.45
+    flex: 0.45,
   },
   iconContainer: {
     width: "50%",
@@ -202,7 +248,7 @@ const styles = StyleSheet.create({
   },
   pokemonImage: {
     width: "80%",
-    aspectRatio: 1
+    aspectRatio: 1,
   },
   typesContainer: {
     width: "50%",
@@ -210,8 +256,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-around",
   },
-  typeText:{
-    ...FONTS.h3
+  typeText: {
+    ...FONTS.h3,
   },
   statsHeaderContainer: {
     alignItems: "center",
@@ -219,17 +265,30 @@ const styles = StyleSheet.create({
     height: 30,
   },
   statsText: {
-    ...FONTS.h4
+    ...FONTS.h4,
   },
   flexDisplayRow: {
     flexDirection: "row",
-    width: "100%"
+    width: "100%",
   },
   statColumn: {
     width: "50%",
     height: 40,
     alignItems: "center",
     justifyContent: "space-around",
-  }
-
+  },
+  welcomeContainer: {
+    width: "100%",
+    height: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 5,
+  },
+  welcomeText: {
+    ...FONTS.h2,
+  },
+  welcomeTextSmaller: {
+    ...FONTS.h3,
+    marginTop: 15,
+  },
 });

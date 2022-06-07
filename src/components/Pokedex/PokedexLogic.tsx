@@ -50,5 +50,6 @@ export const PokedexLogic = () => {
     getRandomPokemonLink,
     getRandomPokemon,
     pokemon,
+    searchingStatus,
   };
 };
