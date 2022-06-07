@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { allPokemon } from "../../../assets/data/allPokemon";
 import { useDispatch, useSelector } from "react-redux";
 import { setNewPokemon } from "../../features/CurrentPokemonSlice";
@@ -9,6 +9,13 @@ import { setSearchingStatus } from "../../features/PokemonSearching";
 export const PokedexLogic = () => {
   const dispatch = useDispatch();
   const pokemon = useSelector((state: RootState) => state.pokemon);
+  const [searchingRefreshed, setSearchingRefreshed] = useState<boolean>(true);
+  const refreshedToTrue = () => {
+    setSearchingRefreshed((prevState) => true);
+  };
+  const refreshedToFalse = () => {
+    setSearchingRefreshed((prevState) => false);
+  };
   const searchingStatus = useSelector(
     (state: RootState) => state.pokemonSearching.status
   );
@@ -33,9 +40,9 @@ export const PokedexLogic = () => {
             let roll = generateRandomInRange(1, 10);
             console.log(roll);
             if (roll < 6) {
-              clearInterval(searching);
-              dispatch(setNewPokemon(json));
               dispatch(setSearchingStatus("found"));
+              dispatch(setNewPokemon(json));
+              clearInterval(searching);
             }
           }, 1000);
         });
@@ -51,5 +58,8 @@ export const PokedexLogic = () => {
     getRandomPokemon,
     pokemon,
     searchingStatus,
+    searchingRefreshed,
+    refreshedToTrue,
+    refreshedToFalse,
   };
 };

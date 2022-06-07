@@ -13,6 +13,8 @@ import Animated, {
   useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
+  withTiming,
+  runOnJS,
 } from "react-native-reanimated";
 import {
   PanGestureHandler,
@@ -20,8 +22,15 @@ import {
 } from "react-native-gesture-handler";
 
 const Pokedex = () => {
-  const { getRandomPokemonLink, getRandomPokemon, pokemon, searchingStatus } =
-    PokedexLogic();
+  const {
+    getRandomPokemonLink,
+    getRandomPokemon,
+    pokemon,
+    searchingStatus,
+    searchingRefreshed,
+    refreshedToTrue,
+    refreshedToFalse,
+  } = PokedexLogic();
   const translateX = useSharedValue(0);
   const onGestureEvent =
     useAnimatedGestureHandler<PanGestureHandlerGestureEvent>({
@@ -34,7 +43,19 @@ const Pokedex = () => {
           SIZES.SCREEN_WIDTH / 1.3
         );
       },
-      onEnd: () => {},
+      onEnd: (event) => {
+        if (event.translationX > 240) {
+          translateX.value = withTiming(SIZES.SCREEN_WIDTH / 1.3);
+          runOnJS(refreshedToTrue)();
+        }
+        if (event.translationX <= 240) {
+          translateX.value = withTiming(0);
+          if (searchingRefreshed === true) {
+            runOnJS(setTimeout)(getRandomPokemon, 500);
+            runOnJS(refreshedToFalse)();
+          }
+        }
+      },
     });
 
   const animatedFlipStyle = useAnimatedStyle(() => {
