@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import Animated, {
   interpolate,
   useAnimatedGestureHandler,
@@ -14,8 +14,11 @@ import {
 } from "react-native-gesture-handler";
 import { PokedexLogic } from "./PokedexLogic";
 import { SIZES } from "../../../assets/consts/consts";
+import { useDispatch } from "react-redux";
+import { catchingVisibilityToTrue } from "../../features/CatchingVisibility";
 
 const PokedexReanimated = () => {
+  const dispatch = useDispatch();
   const translateX = useSharedValue(0);
   const {
     getRandomPokemon,
@@ -78,11 +81,30 @@ const PokedexReanimated = () => {
       ],
     };
   });
+
+  ////
+  // Vertical transformation to allow for catching module
+  ////
+  const translateY = useSharedValue(0);
+  const movePokedexDown = () => {
+    translateY.value = withTiming(SIZES.SCREEN_HEIGHT * 0.85, {
+      duration: 700,
+    });
+    dispatch(catchingVisibilityToTrue());
+  };
+  const pokedexVerticalAnimation = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateY: translateY.value }],
+    };
+  });
+
   return {
     translateX,
     onGestureEvent,
     animatedFlipStyle,
+    pokedexVerticalAnimation,
+    movePokedexDown,
   };
-};
+};;
 
 export default PokedexReanimated;

@@ -25,10 +25,16 @@ import PokedexReanimated from "./PokedexReanimated";
 
 const Pokedex = () => {
   const { pokemon, searchingStatus, searchingRefreshed } = PokedexLogic();
-  const { translateX, onGestureEvent, animatedFlipStyle } = PokedexReanimated();
+  const {
+    translateX,
+    onGestureEvent,
+    animatedFlipStyle,
+    pokedexVerticalAnimation,
+    movePokedexDown,
+  } = PokedexReanimated();
 
   return (
-    <View style={styles.container}>
+    <Animated.View style={[styles.container, pokedexVerticalAnimation]}>
       {/* Outside "cover" of the pokedex. PanGesture to read user swipes and move it. */}
       <PanGestureHandler onGestureEvent={onGestureEvent}>
         <Animated.View style={[styles.outsideContainer, animatedFlipStyle]}>
@@ -95,7 +101,7 @@ const Pokedex = () => {
       </View>
 
       {/* Green button inside pokedex used for switching to catching mode */}
-      <TouchableWithoutFeedback onPress={() => {}}>
+      <TouchableWithoutFeedback onPress={movePokedexDown}>
         <View style={styles.greenButtonContainer}></View>
       </TouchableWithoutFeedback>
 
@@ -173,7 +179,7 @@ const Pokedex = () => {
           </>
         )}
       </View>
-    </View>
+    </Animated.View>
   );
 };
 

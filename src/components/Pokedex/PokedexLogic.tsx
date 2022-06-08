@@ -19,9 +19,11 @@ export const PokedexLogic = () => {
   ////
   const [searchingRefreshed, setSearchingRefreshed] = useState<boolean>(true);
   const refreshedToTrue = () => {
+    console.log("refreshed to true");
     setSearchingRefreshed((prevState) => true);
   };
   const refreshedToFalse = () => {
+    console.log("refreshed to false");
     setSearchingRefreshed((prevState) => false);
   };
   ////
@@ -61,7 +63,6 @@ export const PokedexLogic = () => {
           // To simulate random searching time, every second get random number from 1 to 10 and check if is smaller than 6
           searching = setInterval(() => {
             let roll = generateRandomInRange(1, 10);
-            console.log(roll);
             //When roll is successful set searching state to "found" and save pokemon data in redux. Stop the timer.
             if (roll < 6) {
               dispatch(setSearchingStatus("found"));
