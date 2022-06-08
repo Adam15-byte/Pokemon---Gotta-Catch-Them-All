@@ -13,6 +13,7 @@ export const pokemonSearching = createSlice({
   initialState,
   reducers: {
     setSearchingStatus: (state, action) => {
+      console.log(action.payload);
       state.status = action.payload;
     },
   },

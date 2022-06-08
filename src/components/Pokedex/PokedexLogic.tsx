@@ -74,6 +74,7 @@ export const PokedexLogic = () => {
       console.log(e);
     }
   };
+
   return {
     getRandomPokemonLink,
     getRandomPokemon,

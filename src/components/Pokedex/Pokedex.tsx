@@ -20,72 +20,13 @@ import {
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
 } from "react-native-gesture-handler";
+import { styles } from "./PokedexStyle";
+import PokedexReanimated from "./PokedexReanimated";
 
 const Pokedex = () => {
-  const {
-    getRandomPokemonLink,
-    getRandomPokemon,
-    pokemon,
-    searchingStatus,
-    searchingRefreshed,
-    refreshedToTrue,
-    refreshedToFalse,
-  } = PokedexLogic();
-  const translateX = useSharedValue(0);
-  const onGestureEvent =
-    useAnimatedGestureHandler<PanGestureHandlerGestureEvent>({
-      onStart: (_, context) => {
-        context.x = translateX.value;
-      },
-      onActive: (event, context) => {
-        if (searchingStatus !== "searching") {
-          translateX.value = Math.min(
-            Math.max(event.translationX + context.x, 0),
-            SIZES.SCREEN_WIDTH / 1.3
-          );
-        }
-      },
-      onEnd: (event) => {
-        ////
-        // When swipe is large enough finish swipe automatically to largest value of swipe.
-        ////
-        if (event.translationX > 240) {
-          translateX.value = withTiming(SIZES.SCREEN_WIDTH / 1.3);
-          //Switch refresh to true
-          runOnJS(refreshedToTrue)();
-        }
-        ////
-        // When swipe is smaller than 240 get outside automatically to 0.
-        ////
-        if (event.translationX <= 240) {
-          translateX.value = withTiming(0);
-          //Fire only when searching is refreshed to prevent firing with "little swipes" that don't show the pokemon fully.
-          if (searchingRefreshed === true) {
-            //Fire with delay to make sure that it renders after backside is fully swiped(closed)
-            runOnJS(setTimeout)(refreshedToFalse, 1000);
-            runOnJS(setTimeout)(getRandomPokemon, 500);
-          }
-        }
-      },
-    });
+  const { pokemon, searchingStatus, searchingRefreshed } = PokedexLogic();
+  const { translateX, onGestureEvent, animatedFlipStyle } = PokedexReanimated();
 
-  ////
-  // Animated style for backside to allow for swiping
-  ////
-  const animatedFlipStyle = useAnimatedStyle(() => {
-    const rotateY = interpolate(
-      translateX.value,
-      [0, SIZES.SCREEN_WIDTH],
-      [0, 3]
-    );
-    return {
-      transform: [
-        { perspective: 150 },
-        { translateX: translateX.value },
-        { rotateY: `${rotateY}deg` },
-      ],
-    };
-  });
   return (
     <View style={styles.container}>
       {/* Outside "cover" of the pokedex. PanGesture to read user swipes and move it. */}
@@ -154,7 +95,7 @@ const Pokedex = () => {
       </View>
 
       {/* Green button inside pokedex used for switching to catching mode */}
-      <TouchableWithoutFeedback onPress={getRandomPokemon}>
+      <TouchableWithoutFeedback onPress={() => {}}>
         <View style={styles.greenButtonContainer}></View>
       </TouchableWithoutFeedback>
 
@@ -237,160 +178,3 @@ const Pokedex = () => {
 };
 
 export default Pokedex;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: SIZES.SCREEN_WIDTH,
-    alignItems: "center",
-    justifyContent: "flex-end",
-  },
-  insidePokedex: {
-    position: "absolute",
-    width: SIZES.SCREEN_WIDTH * 0.9,
-    zIndex: 2,
-    top: 30,
-  },
-  outsideContainer: {
-    position: "absolute",
-    flex: 2,
-    zIndex: 300,
-    top: 0,
-    width: SIZES.SCREEN_WIDTH,
-    alignItems: "center",
-    justifyContent: "flex-end",
-  },
-  outsidePokedex: {
-    position: "absolute",
-    width: SIZES.SCREEN_WIDTH * 0.9,
-    zIndex: 300,
-    top: 30,
-  },
-  greenButtonContainer: {
-    zIndex: 10,
-    position: "absolute",
-    bottom: SIZES.SCREEN_HEIGHT * 0.1,
-    left: SIZES.SCREEN_WIDTH * 0.3,
-    width: SIZES.SCREEN_WIDTH * 0.3,
-    height: SIZES.SCREEN_HEIGHT * 0.1,
-    backgroundColor: COLORS.green,
-  },
-  flashIndicatorContainer: {
-    position: "absolute",
-    zIndex: 20,
-    top: SIZES.SCREEN_HEIGHT * 0.11,
-    right: SIZES.SCREEN_WIDTH * 0.13,
-    width: 70,
-    height: 70,
-  },
-  flashIndicatorImage: {
-    zIndex: 20,
-    width: 70,
-    height: 70,
-  },
-  transparentIndicator: {
-    zIndex: 19,
-    width: 70,
-    height: 70,
-    position: "absolute",
-  },
-  infoTabContainer: {
-    position: "absolute",
-    zIndex: 20,
-    top: SIZES.SCREEN_HEIGHT * 0.21,
-    width: 250,
-    height: 90,
-    alignSelf: "center",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  infoCardContainer: {
-    zIndex: 1,
-    position: "absolute",
-    bottom: SIZES.SCREEN_HEIGHT * 0.35,
-    left: SIZES.SCREEN_WIDTH * 0.18,
-    width: SIZES.SCREEN_WIDTH * 0.64,
-    height: SIZES.SCREEN_HEIGHT * 0.24,
-    backgroundColor: COLORS.white,
-  },
-  nameContainer: {
-    flex: 0.15,
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  nameText: {
-    ...FONTS.h2,
-  },
-  iconTypesContainer: {
-    flexDirection: "row",
-    flex: 0.4,
-    width: "100%",
-    marginTop: 10,
-  },
-  statsContainer: {
-    flex: 0.45,
-  },
-  iconContainer: {
-    width: "50%",
-    height: "100%",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  pokemonImage: {
-    width: "80%",
-    aspectRatio: 1,
-  },
-  typesContainer: {
-    width: "50%",
-    height: "100%",
-    alignItems: "center",
-    justifyContent: "space-around",
-  },
-  typeText: {
-    ...FONTS.h3,
-  },
-  statsHeaderContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    height: 30,
-  },
-  statsText: {
-    ...FONTS.h4,
-  },
-  flexDisplayRow: {
-    flexDirection: "row",
-    width: "100%",
-  },
-  statColumn: {
-    width: "50%",
-    height: 40,
-    alignItems: "center",
-    justifyContent: "space-around",
-  },
-  welcomeContainer: {
-    width: "100%",
-    height: "100%",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 5,
-  },
-  welcomeText: {
-    ...FONTS.h2,
-  },
-  welcomeTextSmaller: {
-    ...FONTS.h3,
-    marginTop: 15,
-  },
-  infoBar: {
-    width: "100%",
-    zIndex: 1,
-  },
-  infoTabText: {
-    position: "absolute",
-    zIndex: 2,
-    ...FONTS.h3,
-    marginHorizontal: 30,
-    textAlign: "center",
-  },
-});
