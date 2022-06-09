@@ -15,7 +15,10 @@ import {
 import { PokedexLogic } from "./PokedexLogic";
 import { SIZES } from "../../../assets/consts/consts";
 import { useDispatch } from "react-redux";
-import { catchingVisibilityToTrue } from "../../features/CatchingVisibility";
+import {
+  catchingVisibilityToTrue,
+  catchingVisibilityToFalse,
+} from "../../features/CatchingVisibility";
 
 const PokedexReanimated = () => {
   const dispatch = useDispatch();
@@ -87,10 +90,18 @@ const PokedexReanimated = () => {
   ////
   const translateY = useSharedValue(0);
   const movePokedexDown = () => {
+    console.log("Pokedex down");
     translateY.value = withTiming(SIZES.SCREEN_HEIGHT * 0.85, {
       duration: 700,
     });
     dispatch(catchingVisibilityToTrue());
+  };
+  const movePokedexUp = () => {
+    console.log("Pokedex up");
+    translateY.value = withTiming(0, {
+      duration: 700,
+    });
+    dispatch(catchingVisibilityToFalse());
   };
   const pokedexVerticalAnimation = useAnimatedStyle(() => {
     return {
@@ -104,6 +115,7 @@ const PokedexReanimated = () => {
     animatedFlipStyle,
     pokedexVerticalAnimation,
     movePokedexDown,
+    movePokedexUp,
   };
 };;
 

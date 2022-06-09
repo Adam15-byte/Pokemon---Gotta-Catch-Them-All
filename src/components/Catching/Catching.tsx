@@ -22,6 +22,8 @@ import {
   PanGestureHandlerGestureEvent,
 } from "react-native-gesture-handler";
 import MessageBox from "../MessageBox/MessageBox";
+import { catchingVisibilityToFalse } from "../../features/CatchingVisibility";
+import PokedexReanimated from "../Pokedex/PokedexReanimated";
 
 const Catching = () => {
   const [isPokeballOpen, setIsPokeBallOpen] = useState(false);
@@ -121,6 +123,12 @@ const Catching = () => {
       },
       onFinish: () => {},
     });
+  const dispatch = useDispatch();
+  const { movePokedexUp } = PokedexReanimated();
+  const clearCatchingScreen = () => {
+    changeMessageDisplayed("");
+    movePokedexUp();
+  };
   const pokeballMovementStyle = useAnimatedStyle(() => {
     const scale = interpolate(
       translateY.value,
@@ -159,7 +167,10 @@ const Catching = () => {
             />
           </Animated.View>
           {messageDisplay === "" ? null : (
-            <MessageBox Message={messageDisplay} />
+            <MessageBox
+              Message={messageDisplay}
+              onPress={clearCatchingScreen}
+            />
           )}
           <Animated.View style={[styles.separatorContainer, separatorOpacity]}>
             <Image

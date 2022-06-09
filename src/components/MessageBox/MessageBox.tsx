@@ -1,21 +1,21 @@
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, Pressable } from "react-native";
 import React from "react";
 import { SIZES, FONTS } from "../../../assets/consts/consts";
 
-const MessageBox = ({ Message, Button }) => {
+const MessageBox = ({ Message, onPress }) => {
   return (
     <View style={styles.container}>
       <Text numberOfLines={2} style={styles.message}>
         {Message}
       </Text>
-      <View style={styles.buttonContainer}>
+      <Pressable onPress={onPress} style={styles.buttonContainer}>
         <Text style={styles.buttonText}>Search next</Text>
         <Image
           source={require("../../../assets/images/ButtonPixelated.png")}
           resizeMode="contain"
           style={styles.buttonImage}
         />
-      </View>
+      </Pressable>
       <Image
         source={require("../../../assets/images/MessageBox.png")}
         resizeMode="contain"
