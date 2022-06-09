@@ -13,13 +13,55 @@ import Animated, {
   useSharedValue,
   runOnJS,
   withTiming,
+  withDecay,
+  withDelay,
+  withSequence,
 } from "react-native-reanimated";
 import {
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
 } from "react-native-gesture-handler";
+import MessageBox from "../MessageBox/MessageBox";
 
 const Catching = () => {
+  const [isPokeballOpen, setIsPokeBallOpen] = useState(false);
+  const pokeballRotation = useSharedValue(0);
+  const shakePokeball = () => {
+    pokeballRotation.value = withDelay(
+      2200,
+      withSequence(
+        withTiming(45),
+        withTiming(-45),
+        withTiming(45),
+        withTiming(-45),
+        withTiming(0)
+      )
+    );
+  };
+  const openPokeball = () => {
+    setTimeout(() => {
+      setIsPokeBallOpen((prevState) => true);
+    }, 1000);
+  };
+  const closePokeball = () => {
+    setTimeout(() => {
+      setIsPokeBallOpen((prevState) => false);
+    }, 1800);
+  };
+  const translateXpokemon = useSharedValue(0);
+  const scalePokemon = useSharedValue(1);
+  const trapPokemonInPokeball = () => {
+    translateXpokemon.value = withDelay(1200, withTiming(60));
+    scalePokemon.value = withDelay(1200, withTiming(0));
+  };
+  const trappingPokemonStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        { translateX: translateXpokemon.value },
+        { scale: scalePokemon.value },
+      ],
+    };
+  });
   const pokemon = useSelector((state: RootState) => state.pokemon);
   const visibility = useSelector(
     (state: RootState) => state.CatchingVisibility.visible
@@ -28,13 +70,15 @@ const Catching = () => {
   const translateX = useSharedValue(0);
   const [gestureEnabled, setGestureEnabled] = useState(true);
   const disableGestures = () => {
-    console.log("something fired");
     setGestureEnabled((prevState) => false);
   };
   const moveToCatchingPosition = () => {
-    console.log("something fired");
-    translateY.value = withTiming(-456);
-    translateX.value = withTiming(117.5);
+    translateY.value = withTiming(-456, { duration: 1000 });
+    translateX.value = withTiming(117.5, { duration: 1000 });
+    openPokeball();
+    closePokeball();
+    trapPokemonInPokeball();
+    shakePokeball();
   };
 
   const onGestureEvent =
@@ -47,7 +91,6 @@ const Catching = () => {
         if (gestureEnabled === true) {
           translateX.value = event.translationX + context.x;
           translateY.value = event.translationY + context.y;
-          console.log("Y: ", event.translationY);
           if (translateY.value <= -100) {
             runOnJS(disableGestures)();
             runOnJS(moveToCatchingPosition)();
@@ -68,8 +111,16 @@ const Catching = () => {
         { translateX: translateX.value },
         { translateY: translateY.value },
         { scale: scale },
+        { rotateZ: `${pokeballRotation.value}deg` },
       ],
     };
+  });
+  ////
+  // No idea why these value for opacity and transferY work. Needs investigation.
+  ////
+  const separatorOpacity = useAnimatedStyle(() => {
+    let opacity = interpolate(translateY.value, [180, 80, -250], [1, 0, 1]);
+    return { opacity };
   });
   return (
     <>
@@ -77,7 +128,7 @@ const Catching = () => {
         <View style={styles.container}>
           <Animated.View
             entering={SlideInDown.delay(600).duration(500)}
-            style={styles.pokemonContainer}
+            style={[styles.pokemonContainer, trappingPokemonStyle]}
           >
             <Image
               source={{ uri: pokemon.image }}
@@ -85,16 +136,32 @@ const Catching = () => {
               resizeMode="contain"
             />
           </Animated.View>
+          <MessageBox />
+          <Animated.View style={[styles.separatorContainer, separatorOpacity]}>
+            <Image
+              source={require("../../../assets/images/Separator.png")}
+              resizeMode="contain"
+              style={styles.separatorImage}
+            />
+          </Animated.View>
           <PanGestureHandler onGestureEvent={onGestureEvent}>
             <Animated.View
               entering={SlideInUp.delay(600).duration(500)}
               style={[styles.pokeballContainer, pokeballMovementStyle]}
             >
-              <Image
-                source={require("../../../assets/images/ClosedPokeball.png")}
-                style={styles.pokeballStyle}
-                resizeMode="contain"
-              />
+              {isPokeballOpen ? (
+                <Image
+                  source={require("../../../assets/images/OpenPokeball.png")}
+                  style={styles.pokeballStyle}
+                  resizeMode="contain"
+                />
+              ) : (
+                <Image
+                  source={require("../../../assets/images/ClosedPokeball.png")}
+                  style={styles.pokeballStyle}
+                  resizeMode="contain"
+                />
+              )}
             </Animated.View>
           </PanGestureHandler>
         </View>
@@ -127,5 +194,13 @@ const styles = StyleSheet.create({
   pokeballStyle: {
     width: 150,
     height: 150,
+  },
+  separatorContainer: {
+    position: "absolute",
+    bottom: 375,
+  },
+  separatorImage: {
+    width: SIZES.SCREEN_WIDTH,
+    height: 50,
   },
 });
