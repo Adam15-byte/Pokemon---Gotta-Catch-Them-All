@@ -3,13 +3,54 @@ import React, { useEffect } from "react";
 import { RootState } from "../../features/store";
 import { SIZES } from "../../../assets/consts/consts";
 import { useSelector, useDispatch } from "react-redux";
-import Animated, { SlideInDown, SlideInUp } from "react-native-reanimated";
+import Animated, {
+  Extrapolate,
+  interpolate,
+  SlideInDown,
+  SlideInUp,
+  useAnimatedGestureHandler,
+  useAnimatedStyle,
+  useSharedValue,
+} from "react-native-reanimated";
+import {
+  PanGestureHandler,
+  PanGestureHandlerGestureEvent,
+} from "react-native-gesture-handler";
 
 const Catching = () => {
   const pokemon = useSelector((state: RootState) => state.pokemon);
   const visibility = useSelector(
     (state: RootState) => state.CatchingVisibility.visible
   );
+  const translateY = useSharedValue(0);
+  const translateX = useSharedValue(0);
+  const onGestureEvent =
+    useAnimatedGestureHandler<PanGestureHandlerGestureEvent>({
+      onStart: (_, context) => {
+        context.x = translateX.value;
+        context.y = translateY.value;
+      },
+      onActive: (event, context) => {
+        translateX.value = event.translationX + context.x;
+        translateY.value = event.translationY + context.y;
+      },
+      onFinish: () => {},
+    });
+  const pokeballMovementStyle = useAnimatedStyle(() => {
+    const scale = interpolate(
+      translateY.value,
+      [SIZES.SCREEN_HEIGHT * 0.2, 0, -SIZES.SCREEN_HEIGHT],
+      [1.2, 1, 0],
+      Extrapolate.CLAMP
+    );
+    return {
+      transform: [
+        { translateX: translateX.value },
+        { translateY: translateY.value },
+        { scale: scale },
+      ],
+    };
+  });
   return (
     <>
       {visibility === true && (
@@ -24,16 +65,18 @@ const Catching = () => {
               resizeMode="contain"
             />
           </Animated.View>
-          <Animated.View
-            entering={SlideInUp.delay(600).duration(500)}
-            style={styles.pokeballContainer}
-          >
-            <Image
-              source={require("../../../assets/images/ClosedPokeball.png")}
-              style={styles.pokeballStyle}
-              resizeMode="contain"
-            />
-          </Animated.View>
+          <PanGestureHandler onGestureEvent={onGestureEvent}>
+            <Animated.View
+              entering={SlideInUp.delay(600).duration(500)}
+              style={[styles.pokeballContainer, pokeballMovementStyle]}
+            >
+              <Image
+                source={require("../../../assets/images/ClosedPokeball.png")}
+                style={styles.pokeballStyle}
+                resizeMode="contain"
+              />
+            </Animated.View>
+          </PanGestureHandler>
         </View>
       )}
     </>
@@ -62,7 +105,7 @@ const styles = StyleSheet.create({
     marginBottom: 150,
   },
   pokeballStyle: {
-    width: 200,
-    height: 200,
+    width: 150,
+    height: 150,
   },
 });
