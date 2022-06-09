@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Image } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { RootState } from "../../features/store";
 import { SIZES } from "../../../assets/consts/consts";
 import { useSelector, useDispatch } from "react-redux";
@@ -11,6 +11,8 @@ import Animated, {
   useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
+  runOnJS,
+  withTiming,
 } from "react-native-reanimated";
 import {
   PanGestureHandler,
@@ -24,6 +26,17 @@ const Catching = () => {
   );
   const translateY = useSharedValue(0);
   const translateX = useSharedValue(0);
+  const [gestureEnabled, setGestureEnabled] = useState(true);
+  const disableGestures = () => {
+    console.log("something fired");
+    setGestureEnabled((prevState) => false);
+  };
+  const moveToCatchingPosition = () => {
+    console.log("something fired");
+    translateY.value = withTiming(-456);
+    translateX.value = withTiming(117.5);
+  };
+
   const onGestureEvent =
     useAnimatedGestureHandler<PanGestureHandlerGestureEvent>({
       onStart: (_, context) => {
@@ -31,8 +44,15 @@ const Catching = () => {
         context.y = translateY.value;
       },
       onActive: (event, context) => {
-        translateX.value = event.translationX + context.x;
-        translateY.value = event.translationY + context.y;
+        if (gestureEnabled === true) {
+          translateX.value = event.translationX + context.x;
+          translateY.value = event.translationY + context.y;
+          console.log("Y: ", event.translationY);
+          if (translateY.value <= -100) {
+            runOnJS(disableGestures)();
+            runOnJS(moveToCatchingPosition)();
+          }
+        }
       },
       onFinish: () => {},
     });
