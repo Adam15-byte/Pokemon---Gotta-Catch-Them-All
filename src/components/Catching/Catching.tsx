@@ -72,6 +72,25 @@ const Catching = () => {
   const disableGestures = () => {
     setGestureEnabled((prevState) => false);
   };
+  const generateRandomInRange = (min: number, max: number) => {
+    const difference = max - min;
+    let random = Math.random();
+    random = Math.floor(random * difference);
+    random += min;
+    return random;
+  };
+  const [messageDisplay, setMessageDisplay] = useState("");
+  const changeMessageDisplayed = (text: string) => {
+    setMessageDisplay((prevState) => text);
+  };
+  const rollIfCaught = () => {
+    const roll = generateRandomInRange(1, 10);
+    if (roll > 5) {
+      changeMessageDisplayed(`${pokemon.name} caught!`);
+    } else {
+      changeMessageDisplayed(`${pokemon.name} escaped...`);
+    }
+  };
   const moveToCatchingPosition = () => {
     translateY.value = withTiming(-456, { duration: 1000 });
     translateX.value = withTiming(117.5, { duration: 1000 });
@@ -79,6 +98,9 @@ const Catching = () => {
     closePokeball();
     trapPokemonInPokeball();
     shakePokeball();
+    setTimeout(() => {
+      rollIfCaught();
+    }, 3500);
   };
 
   const onGestureEvent =
@@ -136,7 +158,9 @@ const Catching = () => {
               resizeMode="contain"
             />
           </Animated.View>
-          <MessageBox />
+          {messageDisplay === "" ? null : (
+            <MessageBox Message={messageDisplay} />
+          )}
           <Animated.View style={[styles.separatorContainer, separatorOpacity]}>
             <Image
               source={require("../../../assets/images/Separator.png")}

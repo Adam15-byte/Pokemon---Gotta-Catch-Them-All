@@ -2,12 +2,14 @@ import { StyleSheet, Text, View, Image } from "react-native";
 import React from "react";
 import { SIZES, FONTS } from "../../../assets/consts/consts";
 
-const MessageBox = () => {
+const MessageBox = ({ Message, Button }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.message}>Pokemon caught!</Text>
+      <Text numberOfLines={2} style={styles.message}>
+        {Message}
+      </Text>
       <View style={styles.buttonContainer}>
-        <Text style={styles.buttonText}>Search another</Text>
+        <Text style={styles.buttonText}>Search next</Text>
         <Image
           source={require("../../../assets/images/ButtonPixelated.png")}
           resizeMode="contain"
@@ -36,7 +38,7 @@ const styles = StyleSheet.create({
   },
   boxImage: {
     width: "85%",
-    height: 250,
+    height: 200,
     zIndex: 1,
   },
   buttonImage: {
@@ -60,6 +62,7 @@ const styles = StyleSheet.create({
     ...FONTS.h2,
     position: "absolute",
     zIndex: 2,
-    top: SIZES.SCREEN_HEIGHT / 2 - 30,
+    top: SIZES.SCREEN_HEIGHT / 2 - 40,
+    marginHorizontal: 60,
   },
 });
