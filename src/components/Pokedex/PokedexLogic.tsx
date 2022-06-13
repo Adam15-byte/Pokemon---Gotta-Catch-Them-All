@@ -19,11 +19,9 @@ export const PokedexLogic = () => {
   ////
   const [searchingRefreshed, setSearchingRefreshed] = useState<boolean>(true);
   const refreshedToTrue = () => {
-    console.log("refreshed to true");
     setSearchingRefreshed((prevState) => true);
   };
   const refreshedToFalse = () => {
-    console.log("refreshed to false");
     setSearchingRefreshed((prevState) => false);
   };
   ////

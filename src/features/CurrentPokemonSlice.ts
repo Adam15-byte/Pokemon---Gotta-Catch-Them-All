@@ -27,8 +27,12 @@ export const newPokemon = createSlice({
       state.stats = action.payload.stats;
       state.types = action.payload.types;
     },
+    setPokemonToEmpty: (state) => {
+      state.id = null;
+      state.name = "empty";
+    },
   },
 });
 
-export const { setNewPokemon } = newPokemon.actions;
+export const { setNewPokemon, setPokemonToEmpty } = newPokemon.actions;
 export default newPokemon.reducer;

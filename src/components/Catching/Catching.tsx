@@ -73,6 +73,9 @@ const Catching = () => {
   const disableGestures = () => {
     setGestureEnabled((prevState) => false);
   };
+  const enableGestures = () => {
+    setGestureEnabled((prevState) => true);
+  };
   const generateRandomInRange = (min: number, max: number) => {
     const difference = max - min;
     let random = Math.random();
@@ -139,6 +142,15 @@ const Catching = () => {
       ],
     };
   });
+
+  const resetPokeballAndPokemon = () => {
+    translateX.value = 0;
+    translateY.value = 0;
+    translateXpokemon.value = 0;
+    scalePokemon.value = 1;
+    changeMessageDisplayed("");
+    enableGestures();
+  };
   ////
   // No idea why these value for opacity and transferY work. Needs investigation.
   ////
@@ -161,7 +173,10 @@ const Catching = () => {
             />
           </Animated.View>
           {messageDisplay === "" ? null : (
-            <MessageBox Message={messageDisplay} />
+            <MessageBox
+              Message={messageDisplay}
+              onPress={resetPokeballAndPokemon}
+            />
           )}
           <Animated.View style={[styles.separatorContainer, separatorOpacity]}>
             <Image
@@ -205,7 +220,6 @@ const styles = StyleSheet.create({
     width: SIZES.SCREEN_WIDTH,
     alignItems: "center",
     justifyContent: "flex-start",
-    backgroundColor: "green",
   },
   pokemonContainer: {
     marginTop: 100,

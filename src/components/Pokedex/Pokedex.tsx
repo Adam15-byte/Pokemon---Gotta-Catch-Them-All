@@ -121,11 +121,16 @@ const Pokedex = () => {
       {/* Green button inside pokedex used for switching to catching mode */}
       <TouchableWithoutFeedback
         onPress={() => {
-          dispatch(catchingVisibilityToTrue());
-          movePokedexDown();
+          if (pokemon.id !== null) {
+            dispatch(catchingVisibilityToTrue());
+            movePokedexDown();
+          }
+          if (pokemon.id === null) null;
         }}
       >
-        <View style={styles.greenButtonContainer}></View>
+        <View style={styles.greenButtonContainer}>
+          {pokemon.id !== null && <Text style={styles.catchText}>CATCH</Text>}
+        </View>
       </TouchableWithoutFeedback>
 
       {/* Actuall Inside image of Pokedex */}
@@ -138,7 +143,7 @@ const Pokedex = () => {
       {/* White Card inside pokedex that displays all the data */}
       <View style={styles.infoCardContainer}>
         {/* Info screen shown on initial opening of pokedex */}
-        {pokemon.id === null && (
+        {pokemon.name === "" && (
           <View style={styles.welcomeContainer}>
             <Text style={styles.welcomeText}>Welcome!</Text>
             <Text style={styles.welcomeTextSmaller}>
@@ -146,6 +151,15 @@ const Pokedex = () => {
             </Text>
             <Text style={styles.welcomeTextSmaller}>
               Close Pokedex to look for new pokemon.
+            </Text>
+          </View>
+        )}
+
+        {/* Display info after attempt to catch Pokemon */}
+        {pokemon.name === "empty" && (
+          <View style={styles.welcomeContainer}>
+            <Text style={styles.resetText}>
+              CLOSE TO SEARCH FOR ANOTHER POKEMON
             </Text>
           </View>
         )}

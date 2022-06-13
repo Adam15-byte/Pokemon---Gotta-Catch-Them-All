@@ -14,7 +14,7 @@ import {
 } from "react-native-gesture-handler";
 import { PokedexLogic } from "./PokedexLogic";
 import { SIZES } from "../../../assets/consts/consts";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   catchingVisibilityToTrue,
   catchingVisibilityToFalse,
@@ -31,13 +31,16 @@ const PokedexReanimated = () => {
     refreshedToTrue,
     refreshedToFalse,
   } = PokedexLogic();
+  const catchingVisibility = useSelector(
+    (state: RootState) => state.CatchingVisibility.visible
+  );
   const onGestureEvent =
     useAnimatedGestureHandler<PanGestureHandlerGestureEvent>({
       onStart: (_, context) => {
         context.x = translateX.value;
       },
       onActive: (event, context) => {
-        if (searchingStatus !== "searching") {
+        if (searchingStatus !== "searching" && catchingVisibility !== true) {
           translateX.value = Math.min(
             Math.max(event.translationX + context.x, 0),
             SIZES.SCREEN_WIDTH / 1.3
@@ -48,15 +51,15 @@ const PokedexReanimated = () => {
         ////
         // When swipe is large enough finish swipe automatically to largest value of swipe.
         ////
-        if (event.translationX > 240) {
+        if (event.translationX > 220 && catchingVisibility !== true) {
           translateX.value = withTiming(SIZES.SCREEN_WIDTH / 1.3);
           //Switch refresh to true
           runOnJS(refreshedToTrue)();
         }
         ////
-        // When swipe is smaller than 240 get outside automatically to 0.
+        // When swipe is smaller than 220 get backside automatically to 0.
         ////
-        if (event.translationX <= 240) {
+        if (event.translationX <= 220 && catchingVisibility !== true) {
           translateX.value = withTiming(0);
           //Fire only when searching is refreshed to prevent firing with "little swipes" that don't show the pokemon fully.
           if (searchingRefreshed === true) {
@@ -91,13 +94,11 @@ const PokedexReanimated = () => {
   ////
   const translateY = useSharedValue(0);
   const movePokedexDown = useCallback(() => {
-    console.log("Pokedex down");
     translateY.value = withTiming(SIZES.SCREEN_HEIGHT * 0.85, {
       duration: 700,
     });
   }, [translateY.value]);
   const movePokedexUp = () => {
-    console.log("Pokedex up");
     translateY.value = withTiming(0, {
       duration: 700,
     });

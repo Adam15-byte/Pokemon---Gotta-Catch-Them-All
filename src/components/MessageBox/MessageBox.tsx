@@ -6,7 +6,7 @@ import {
   catchingInitiatedToTrue,
 } from "../../features/CatchingVisibility";
 import { useDispatch } from "react-redux";
-import PokedexReanimated from "../Pokedex/PokedexReanimated";
+import { setPokemonToEmpty } from "../../features/CurrentPokemonSlice";
 
 const MessageBox = ({ Message, onPress }) => {
   const dispatch = useDispatch();
@@ -19,6 +19,10 @@ const MessageBox = ({ Message, onPress }) => {
         onPress={() => {
           dispatch(catchingVisibilityToFalse());
           dispatch(catchingInitiatedToTrue());
+          dispatch(setPokemonToEmpty());
+          setTimeout(() => {
+            onPress();
+          }, 500);
         }}
         style={styles.buttonContainer}
       >
@@ -73,9 +77,10 @@ const styles = StyleSheet.create({
   },
   message: {
     ...FONTS.h2,
+    textAlign: "center",
     position: "absolute",
     zIndex: 2,
     top: SIZES.SCREEN_HEIGHT / 2 - 40,
-    marginHorizontal: 60,
+    marginHorizontal: 80,
   },
 });

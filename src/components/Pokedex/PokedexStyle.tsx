@@ -7,7 +7,6 @@ export const styles = StyleSheet.create({
     width: SIZES.SCREEN_WIDTH,
     alignItems: "center",
     justifyContent: "flex-end",
-    backgroundColor: "blue",
   },
   insidePokedex: {
     position: "absolute",
@@ -38,6 +37,8 @@ export const styles = StyleSheet.create({
     width: SIZES.SCREEN_WIDTH * 0.3,
     height: SIZES.SCREEN_HEIGHT * 0.1,
     backgroundColor: COLORS.green,
+    alignItems: "center",
+    justifyContent: "center",
   },
   flashIndicatorContainer: {
     position: "absolute",
@@ -141,6 +142,14 @@ export const styles = StyleSheet.create({
   },
   welcomeText: {
     ...FONTS.h2,
+  },
+  catchText: {
+    ...FONTS.h2,
+  },
+  resetText: {
+    ...FONTS.h2,
+    textAlign: "center",
+    lineHeight: 25,
   },
   welcomeTextSmaller: {
     ...FONTS.h3,
