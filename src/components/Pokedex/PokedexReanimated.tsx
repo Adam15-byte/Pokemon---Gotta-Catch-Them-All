@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Animated, {
   interpolate,
   useAnimatedGestureHandler,
@@ -19,6 +19,7 @@ import {
   catchingVisibilityToTrue,
   catchingVisibilityToFalse,
 } from "../../features/CatchingVisibility";
+import { RootState } from "../../features/store";
 
 const PokedexReanimated = () => {
   const dispatch = useDispatch();
@@ -89,20 +90,19 @@ const PokedexReanimated = () => {
   // Vertical transformation to allow for catching module
   ////
   const translateY = useSharedValue(0);
-  const movePokedexDown = () => {
+  const movePokedexDown = useCallback(() => {
     console.log("Pokedex down");
     translateY.value = withTiming(SIZES.SCREEN_HEIGHT * 0.85, {
       duration: 700,
     });
-    dispatch(catchingVisibilityToTrue());
-  };
+  }, [translateY.value]);
   const movePokedexUp = () => {
     console.log("Pokedex up");
     translateY.value = withTiming(0, {
       duration: 700,
     });
-    dispatch(catchingVisibilityToFalse());
   };
+
   const pokedexVerticalAnimation = useAnimatedStyle(() => {
     return {
       transform: [{ translateY: translateY.value }],
@@ -117,6 +117,6 @@ const PokedexReanimated = () => {
     movePokedexDown,
     movePokedexUp,
   };
-};;
+};
 
 export default PokedexReanimated;

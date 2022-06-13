@@ -5,7 +5,7 @@ import {
   Image,
   TouchableWithoutFeedback,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { COLORS, FONTS, SIZES } from "../../../assets/consts/consts";
 import { PokedexLogic } from "./PokedexLogic";
 import Animated, {
@@ -15,6 +15,7 @@ import Animated, {
   useSharedValue,
   withTiming,
   runOnJS,
+  runOnUI,
 } from "react-native-reanimated";
 import {
   PanGestureHandler,
@@ -22,6 +23,9 @@ import {
 } from "react-native-gesture-handler";
 import { styles } from "./PokedexStyle";
 import PokedexReanimated from "./PokedexReanimated";
+import { catchingVisibilityToTrue } from "../../features/CatchingVisibility";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../features/store";
 
 const Pokedex = () => {
   const { pokemon, searchingStatus, searchingRefreshed } = PokedexLogic();
@@ -31,10 +35,24 @@ const Pokedex = () => {
     animatedFlipStyle,
     pokedexVerticalAnimation,
     movePokedexDown,
+    movePokedexUp,
   } = PokedexReanimated();
-
+  const catchingVisibility = useSelector(
+    (state: RootState) => state.CatchingVisibility.visible
+  );
+  const catchingInitiatedAtLeastOnce = useSelector(
+    (state: RootState) => state.CatchingVisibility.catchingInitiatedOnce
+  );
+  useEffect(() => {
+    if (catchingVisibility === false && catchingInitiatedAtLeastOnce === true)
+      movePokedexUp();
+  }, [catchingVisibility]);
+  const dispatch = useDispatch();
   return (
     <Animated.View style={[styles.container, pokedexVerticalAnimation]}>
+      {/* <Text style={{ position: "absolute", top: 50 }}>
+        {runOnUI(translateYDisplay)()}
+      </Text> */}
       {/* Outside "cover" of the pokedex. PanGesture to read user swipes and move it. */}
       <PanGestureHandler onGestureEvent={onGestureEvent}>
         <Animated.View style={[styles.outsideContainer, animatedFlipStyle]}>
@@ -101,7 +119,12 @@ const Pokedex = () => {
       </View>
 
       {/* Green button inside pokedex used for switching to catching mode */}
-      <TouchableWithoutFeedback onPress={movePokedexDown}>
+      <TouchableWithoutFeedback
+        onPress={() => {
+          dispatch(catchingVisibilityToTrue());
+          movePokedexDown();
+        }}
+      >
         <View style={styles.greenButtonContainer}></View>
       </TouchableWithoutFeedback>
 

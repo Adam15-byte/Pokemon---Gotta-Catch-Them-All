@@ -7,6 +7,7 @@ export const styles = StyleSheet.create({
     width: SIZES.SCREEN_WIDTH,
     alignItems: "center",
     justifyContent: "flex-end",
+    backgroundColor: "blue",
   },
   insidePokedex: {
     position: "absolute",

@@ -1,14 +1,27 @@
 import { StyleSheet, Text, View, Image, Pressable } from "react-native";
 import React from "react";
 import { SIZES, FONTS } from "../../../assets/consts/consts";
+import {
+  catchingVisibilityToFalse,
+  catchingInitiatedToTrue,
+} from "../../features/CatchingVisibility";
+import { useDispatch } from "react-redux";
+import PokedexReanimated from "../Pokedex/PokedexReanimated";
 
 const MessageBox = ({ Message, onPress }) => {
+  const dispatch = useDispatch();
   return (
     <View style={styles.container}>
       <Text numberOfLines={2} style={styles.message}>
         {Message}
       </Text>
-      <Pressable onPress={onPress} style={styles.buttonContainer}>
+      <Pressable
+        onPress={() => {
+          dispatch(catchingVisibilityToFalse());
+          dispatch(catchingInitiatedToTrue());
+        }}
+        style={styles.buttonContainer}
+      >
         <Text style={styles.buttonText}>Search next</Text>
         <Image
           source={require("../../../assets/images/ButtonPixelated.png")}
