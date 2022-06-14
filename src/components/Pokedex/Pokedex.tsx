@@ -108,9 +108,9 @@ const Pokedex = () => {
             ? "Open Pokedex to begin"
             : searchingStatus === "searching"
             ? "Searching..."
-            : searchingStatus === "found" && searchingRefreshed === false
-            ? "Found!"
-            : "New Pokemon!"}
+            : searchingStatus === "found"
+            ? "New Pokemon!"
+            : null}
         </Text>
         <Image
           source={require("../../../assets/images/InfoBar.png")}

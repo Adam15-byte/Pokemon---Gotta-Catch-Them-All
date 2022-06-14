@@ -20,6 +20,9 @@ export const newPokemon = createSlice({
   name: "newPokemon",
   initialState,
   reducers: {
+    ////
+    // Pokemon to display after searching
+    ////
     setNewPokemon: (state, action) => {
       state.id = action.payload.id;
       state.name = action.payload.name;
@@ -27,6 +30,9 @@ export const newPokemon = createSlice({
       state.stats = action.payload.stats;
       state.types = action.payload.types;
     },
+    ////
+    // Reset displayed pokemon after catching attempt
+    ////
     setPokemonToEmpty: (state) => {
       state.id = null;
       state.name = "empty";

@@ -36,14 +36,15 @@ const FontPreload = () => {
       SplashScreen.hideAsync();
     }
   }, [appIsReady]);
-  const { catchingVisible } = PokedexReanimated();
   if (!appIsReady) {
     return null;
   }
 
   return (
     <View style={styles.pokedexContainer}>
+      {/* Inside of the catching component is only displayed when global state inside "features" is set to true */}
       <Catching />
+      {/* Pokedex is always on display, only moved down when catching component is displayed */}
       <Pokedex />
     </View>
   );

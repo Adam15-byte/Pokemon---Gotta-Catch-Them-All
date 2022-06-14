@@ -121,24 +121,26 @@ const CatchingLogic = () => {
   ////
   const translateY = useSharedValue(0);
   const translateX = useSharedValue(0);
-  const onGestureEvent =
-    useAnimatedGestureHandler<PanGestureHandlerGestureEvent>({
-      onStart: (_, context) => {
-        context.x = translateX.value;
-        context.y = translateY.value;
-      },
-      onActive: (event, context) => {
-        if (gestureEnabled === true) {
-          translateX.value = event.translationX + context.x;
-          translateY.value = event.translationY + context.y;
-          if (translateY.value <= -100) {
-            runOnJS(disableGestures)();
-            runOnJS(moveToCatchingPosition)();
-          }
+  const onGestureEvent = useAnimatedGestureHandler<
+    PanGestureHandlerGestureEvent,
+    { x: number; y: number }
+  >({
+    onStart: (_, context) => {
+      context.x = translateX.value;
+      context.y = translateY.value;
+    },
+    onActive: (event, context) => {
+      if (gestureEnabled === true) {
+        translateX.value = event.translationX + context.x;
+        translateY.value = event.translationY + context.y;
+        if (translateY.value <= -100) {
+          runOnJS(disableGestures)();
+          runOnJS(moveToCatchingPosition)();
         }
-      },
-      onFinish: () => {},
-    });
+      }
+    },
+    onFinish: () => {},
+  });
 
   const pokeballMovementStyle = useAnimatedStyle(() => {
     const scale = interpolate(
@@ -160,7 +162,7 @@ const CatchingLogic = () => {
   ////
   // Message to display the result of catching attempt
   ////
-  const [messageDisplay, setMessageDisplay] = useState("");
+  const [messageDisplay, setMessageDisplay] = useState<string>("");
   const changeMessageDisplayed = (text: string) => {
     setMessageDisplay((prevState) => text);
   };

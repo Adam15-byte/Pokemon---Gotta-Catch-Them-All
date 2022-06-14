@@ -34,50 +34,52 @@ const PokedexReanimated = () => {
   const catchingVisibility = useSelector(
     (state: RootState) => state.CatchingVisibility.visible
   );
-  const onGestureEvent =
-    useAnimatedGestureHandler<PanGestureHandlerGestureEvent>({
-      onStart: (_, context) => {
-        context.x = translateX.value;
-      },
-      onActive: (event, context) => {
-        if (searchingStatus !== "searching" && catchingVisibility !== true) {
-          translateX.value = Math.min(
-            Math.max(event.translationX + context.x, 0),
-            SIZES.SCREEN_WIDTH / 1.3
-          );
+  const onGestureEvent = useAnimatedGestureHandler<
+    PanGestureHandlerGestureEvent,
+    { x: number; y: number }
+  >({
+    onStart: (_, context) => {
+      context.x = translateX.value;
+    },
+    onActive: (event, context) => {
+      if (searchingStatus !== "searching" && catchingVisibility !== true) {
+        translateX.value = Math.min(
+          Math.max(event.translationX + context.x, 0),
+          SIZES.SCREEN_WIDTH / 1.3
+        );
+      }
+    },
+    onEnd: (event) => {
+      ////
+      // When swipe is large enough finish swipe automatically to largest value of swipe.
+      ////
+      if (
+        event.translationX > 220 &&
+        catchingVisibility !== true &&
+        searchingStatus !== "searching"
+      ) {
+        translateX.value = withTiming(SIZES.SCREEN_WIDTH / 1.3);
+        //Switch refresh to true
+        runOnJS(refreshedToTrue)();
+      }
+      ////
+      // When swipe is smaller than 220 get backside automatically to 0.
+      ////
+      if (
+        event.translationX <= 220 &&
+        catchingVisibility !== true &&
+        searchingStatus !== "searching"
+      ) {
+        translateX.value = withTiming(0);
+        //Fire only when searching is refreshed to prevent firing with "little swipes" that don't show the pokemon fully.
+        if (searchingRefreshed === true) {
+          //Fire with delay to make sure that it renders after backside is fully swiped(closed)
+          runOnJS(refreshedToFalse)();
+          runOnJS(setTimeout)(getRandomPokemon, 500);
         }
-      },
-      onEnd: (event) => {
-        ////
-        // When swipe is large enough finish swipe automatically to largest value of swipe.
-        ////
-        if (
-          event.translationX > 220 &&
-          catchingVisibility !== true &&
-          searchingStatus !== "searching"
-        ) {
-          translateX.value = withTiming(SIZES.SCREEN_WIDTH / 1.3);
-          //Switch refresh to true
-          runOnJS(refreshedToTrue)();
-        }
-        ////
-        // When swipe is smaller than 220 get backside automatically to 0.
-        ////
-        if (
-          event.translationX <= 220 &&
-          catchingVisibility !== true &&
-          searchingStatus !== "searching"
-        ) {
-          translateX.value = withTiming(0);
-          //Fire only when searching is refreshed to prevent firing with "little swipes" that don't show the pokemon fully.
-          if (searchingRefreshed === true) {
-            //Fire with delay to make sure that it renders after backside is fully swiped(closed)
-            runOnJS(setTimeout)(refreshedToFalse, 1000);
-            runOnJS(setTimeout)(getRandomPokemon, 500);
-          }
-        }
-      },
-    });
+      }
+    },
+  });
 
   ////
   // Animated style for backside to allow for swiping

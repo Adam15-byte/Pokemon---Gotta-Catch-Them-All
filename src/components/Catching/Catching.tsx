@@ -31,8 +31,10 @@ const Catching = () => {
   } = CatchingLogic();
   return (
     <>
+      {/* Only displayed when global state is set to true */}
       {visibility === true && (
         <View style={styles.container}>
+          {/* Pokemon inside Animated View container to allow for animations */}
           <Animated.View
             entering={SlideInDown.delay(600).duration(500)}
             style={[styles.pokemonContainer, trappingPokemonStyle]}
@@ -43,12 +45,15 @@ const Catching = () => {
               resizeMode="contain"
             />
           </Animated.View>
+          {/* If there is a message to display show the box in the middle with the message */}
           {messageDisplay === "" ? null : (
             <MessageBox
               Message={messageDisplay}
               onPress={resetPokeballAndPokemon}
             />
           )}
+
+          {/* Separator with changing opacity. Shows the line where throwing automation is initiated */}
           <Animated.View style={[styles.separatorContainer, separatorOpacity]}>
             <Image
               source={require("../../../assets/images/Separator.png")}
@@ -56,6 +61,8 @@ const Catching = () => {
               style={styles.separatorImage}
             />
           </Animated.View>
+
+          {/* Pokeball inside PanGestureHandler */}
           <PanGestureHandler onGestureEvent={onGestureEvent}>
             <Animated.View
               entering={SlideInUp.delay(600).duration(500)}

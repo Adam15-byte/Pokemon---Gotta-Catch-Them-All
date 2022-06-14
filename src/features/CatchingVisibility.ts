@@ -15,15 +15,21 @@ export const catchingVisibility = createSlice({
   name: "catchingVisibility",
   initialState,
   reducers: {
-    catchingVisibilityToTrue: (state, action) => {
+    ////
+    // State to determine if catching screen should be displayed
+    ////
+    catchingVisibilityToTrue: (state) => {
       console.log("Catching visibility to true");
       state.visible = true;
     },
-    catchingVisibilityToFalse: (state, action) => {
+    catchingVisibilityToFalse: (state) => {
       console.log("Catching visibility to false");
       state.visible = false;
     },
-    catchingInitiatedToTrue: (state, action) => {
+    ////
+    // Initiated after catching. Used inside useEffect to move the pokedexUp, used to differentiate between first app opening and state after catching
+    ////
+    catchingInitiatedToTrue: (state) => {
       state.catchingInitiatedOnce = true;
     },
   },
