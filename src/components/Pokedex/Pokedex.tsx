@@ -43,6 +43,9 @@ const Pokedex = () => {
   const catchingInitiatedAtLeastOnce = useSelector(
     (state: RootState) => state.CatchingVisibility.catchingInitiatedOnce
   );
+  const PokemonCollection = useSelector(
+    (state: RootState) => state.PokemonCollection
+  );
   useEffect(() => {
     if (catchingVisibility === false && catchingInitiatedAtLeastOnce === true)
       movePokedexUp();
@@ -50,9 +53,9 @@ const Pokedex = () => {
   const dispatch = useDispatch();
   return (
     <Animated.View style={[styles.container, pokedexVerticalAnimation]}>
-      {/* <Text style={{ position: "absolute", top: 50 }}>
-        {runOnUI(translateYDisplay)()}
-      </Text> */}
+      <Text style={{ position: "absolute", top: 50 }}>
+        Pokemons caught: {PokemonCollection.length}
+      </Text>
       {/* Outside "cover" of the pokedex. PanGesture to read user swipes and move it. */}
       <PanGestureHandler onGestureEvent={onGestureEvent}>
         <Animated.View style={[styles.outsideContainer, animatedFlipStyle]}>

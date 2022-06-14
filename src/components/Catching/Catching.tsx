@@ -23,9 +23,11 @@ import {
 } from "react-native-gesture-handler";
 import MessageBox from "../MessageBox/MessageBox";
 import { catchingVisibilityToFalse } from "../../features/CatchingVisibility";
+import { addNewPokemonToCollection } from "../../features/PokemonCollection";
 
 const Catching = () => {
   const [isPokeballOpen, setIsPokeBallOpen] = useState(false);
+  const dispatch = useDispatch();
   const pokeballRotation = useSharedValue(0);
   const shakePokeball = () => {
     pokeballRotation.value = withDelay(
@@ -91,6 +93,7 @@ const Catching = () => {
     const roll = generateRandomInRange(1, 10);
     if (roll > 5) {
       changeMessageDisplayed(`${pokemon.name} caught!`);
+      dispatch(addNewPokemonToCollection(pokemon));
     } else {
       changeMessageDisplayed(`${pokemon.name} escaped...`);
     }
@@ -125,7 +128,7 @@ const Catching = () => {
       },
       onFinish: () => {},
     });
-  const dispatch = useDispatch();
+
   const pokeballMovementStyle = useAnimatedStyle(() => {
     const scale = interpolate(
       translateY.value,
