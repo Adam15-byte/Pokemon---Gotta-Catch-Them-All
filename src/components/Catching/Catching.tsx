@@ -1,30 +1,19 @@
-import { StyleSheet, Text, View, Image } from "react-native";
-import React, { useEffect, useState } from "react";
-import { RootState } from "../../features/store";
-import { SIZES } from "../../../assets/consts/consts";
-import { useSelector, useDispatch } from "react-redux";
+import { Text, View, Image } from "react-native";
+import React from "react";
 import Animated, {
-  Extrapolate,
-  interpolate,
   SlideInDown,
   SlideInUp,
-  useAnimatedGestureHandler,
-  useAnimatedStyle,
-  useSharedValue,
-  runOnJS,
   withTiming,
   withDecay,
   withDelay,
-  withSequence,
 } from "react-native-reanimated";
 import {
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
 } from "react-native-gesture-handler";
 import MessageBox from "../MessageBox/MessageBox";
-import { catchingVisibilityToFalse } from "../../features/CatchingVisibility";
-import { addNewPokemonToCollection } from "../../features/PokemonCollection";
 import CatchingLogic from "./CatchingLogic";
+import { styles } from "./CatchingStyle";
 
 const Catching = () => {
   const {
@@ -94,36 +83,3 @@ const Catching = () => {
 };
 
 export default Catching;
-
-const styles = StyleSheet.create({
-  container: {
-    position: "absolute",
-    height: SIZES.SCREEN_HEIGHT,
-    width: SIZES.SCREEN_WIDTH,
-    alignItems: "center",
-    justifyContent: "flex-start",
-  },
-  pokemonContainer: {
-    marginTop: 100,
-  },
-  pokemonImage: {
-    width: 200,
-    height: 200,
-  },
-  pokeballContainer: {
-    marginTop: "auto",
-    marginBottom: 150,
-  },
-  pokeballStyle: {
-    width: 150,
-    height: 150,
-  },
-  separatorContainer: {
-    position: "absolute",
-    bottom: 375,
-  },
-  separatorImage: {
-    width: SIZES.SCREEN_WIDTH,
-    height: 50,
-  },
-});
