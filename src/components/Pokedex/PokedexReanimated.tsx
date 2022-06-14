@@ -51,7 +51,11 @@ const PokedexReanimated = () => {
         ////
         // When swipe is large enough finish swipe automatically to largest value of swipe.
         ////
-        if (event.translationX > 220 && catchingVisibility !== true) {
+        if (
+          event.translationX > 220 &&
+          catchingVisibility !== true &&
+          searchingStatus !== "searching"
+        ) {
           translateX.value = withTiming(SIZES.SCREEN_WIDTH / 1.3);
           //Switch refresh to true
           runOnJS(refreshedToTrue)();
@@ -59,7 +63,11 @@ const PokedexReanimated = () => {
         ////
         // When swipe is smaller than 220 get backside automatically to 0.
         ////
-        if (event.translationX <= 220 && catchingVisibility !== true) {
+        if (
+          event.translationX <= 220 &&
+          catchingVisibility !== true &&
+          searchingStatus !== "searching"
+        ) {
           translateX.value = withTiming(0);
           //Fire only when searching is refreshed to prevent firing with "little swipes" that don't show the pokemon fully.
           if (searchingRefreshed === true) {

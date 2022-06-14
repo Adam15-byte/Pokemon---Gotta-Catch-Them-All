@@ -26,6 +26,7 @@ import PokedexReanimated from "./PokedexReanimated";
 import { catchingVisibilityToTrue } from "../../features/CatchingVisibility";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../features/store";
+import { pokemonCollection } from "../../features/PokemonCollection";
 
 const Pokedex = () => {
   const { pokemon, searchingStatus, searchingRefreshed } = PokedexLogic();
@@ -53,9 +54,6 @@ const Pokedex = () => {
   const dispatch = useDispatch();
   return (
     <Animated.View style={[styles.container, pokedexVerticalAnimation]}>
-      <Text style={{ position: "absolute", top: 50 }}>
-        Pokemons caught: {PokemonCollection.length}
-      </Text>
       {/* Outside "cover" of the pokedex. PanGesture to read user swipes and move it. */}
       <PanGestureHandler onGestureEvent={onGestureEvent}>
         <Animated.View style={[styles.outsideContainer, animatedFlipStyle]}>
@@ -150,7 +148,8 @@ const Pokedex = () => {
           <View style={styles.welcomeContainer}>
             <Text style={styles.welcomeText}>Welcome!</Text>
             <Text style={styles.welcomeTextSmaller}>
-              Currently you have 0 pokemon. Catch all 151 pokemon.
+              Currently you have {PokemonCollection.length} pokemon. Catch all
+              151 pokemon.
             </Text>
             <Text style={styles.welcomeTextSmaller}>
               Close Pokedex to look for new pokemon.
@@ -162,7 +161,10 @@ const Pokedex = () => {
         {pokemon.name === "empty" && (
           <View style={styles.welcomeContainer}>
             <Text style={styles.resetText}>
-              CLOSE TO SEARCH FOR ANOTHER POKEMON
+              CLOSE POKEDEX TO SEARCH FOR ANOTHER POKEMON
+            </Text>
+            <Text style={styles.welcomeTextSmaller}>
+              You own {PokemonCollection.length} pokemon
             </Text>
           </View>
         )}
