@@ -24,143 +24,22 @@ import {
 import MessageBox from "../MessageBox/MessageBox";
 import { catchingVisibilityToFalse } from "../../features/CatchingVisibility";
 import { addNewPokemonToCollection } from "../../features/PokemonCollection";
+import CatchingLogic from "./CatchingLogic";
 
 const Catching = () => {
-  const [isPokeballOpen, setIsPokeBallOpen] = useState(false);
-  const dispatch = useDispatch();
-  const pokeballRotation = useSharedValue(0);
-  const shakePokeball = () => {
-    pokeballRotation.value = withDelay(
-      2200,
-      withSequence(
-        withTiming(45),
-        withTiming(-45),
-        withTiming(45),
-        withTiming(-45),
-        withTiming(0)
-      )
-    );
-  };
-  const openPokeball = () => {
-    setTimeout(() => {
-      setIsPokeBallOpen((prevState) => true);
-    }, 1000);
-  };
-  const closePokeball = () => {
-    setTimeout(() => {
-      setIsPokeBallOpen((prevState) => false);
-    }, 1800);
-  };
-  const translateXpokemon = useSharedValue(0);
-  const scalePokemon = useSharedValue(1);
-  const trapPokemonInPokeball = () => {
-    translateXpokemon.value = withDelay(1200, withTiming(60));
-    scalePokemon.value = withDelay(1200, withTiming(0));
-  };
-  const trappingPokemonStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        { translateX: translateXpokemon.value },
-        { scale: scalePokemon.value },
-      ],
-    };
-  });
-  const pokemon = useSelector((state: RootState) => state.pokemon);
-  const visibility = useSelector(
-    (state: RootState) => state.CatchingVisibility.visible
-  );
-  const translateY = useSharedValue(0);
-  const translateX = useSharedValue(0);
-  const [gestureEnabled, setGestureEnabled] = useState(true);
-  const disableGestures = () => {
-    setGestureEnabled((prevState) => false);
-  };
-  const enableGestures = () => {
-    setGestureEnabled((prevState) => true);
-  };
-  const generateRandomInRange = (min: number, max: number) => {
-    const difference = max - min;
-    let random = Math.random();
-    random = Math.floor(random * difference);
-    random += min;
-    return random;
-  };
-  const [messageDisplay, setMessageDisplay] = useState("");
-  const changeMessageDisplayed = (text: string) => {
-    setMessageDisplay((prevState) => text);
-  };
-  const rollIfCaught = () => {
-    const roll = generateRandomInRange(1, 10);
-    if (roll > 5) {
-      changeMessageDisplayed(`${pokemon.name} caught!`);
-      dispatch(addNewPokemonToCollection(pokemon));
-    } else {
-      changeMessageDisplayed(`${pokemon.name} escaped...`);
-    }
-  };
-  const moveToCatchingPosition = () => {
-    translateY.value = withTiming(-456, { duration: 1000 });
-    translateX.value = withTiming(117.5, { duration: 1000 });
-    openPokeball();
-    closePokeball();
-    trapPokemonInPokeball();
-    shakePokeball();
-    setTimeout(() => {
-      rollIfCaught();
-    }, 3500);
-  };
-
-  const onGestureEvent =
-    useAnimatedGestureHandler<PanGestureHandlerGestureEvent>({
-      onStart: (_, context) => {
-        context.x = translateX.value;
-        context.y = translateY.value;
-      },
-      onActive: (event, context) => {
-        if (gestureEnabled === true) {
-          translateX.value = event.translationX + context.x;
-          translateY.value = event.translationY + context.y;
-          if (translateY.value <= -100) {
-            runOnJS(disableGestures)();
-            runOnJS(moveToCatchingPosition)();
-          }
-        }
-      },
-      onFinish: () => {},
-    });
-
-  const pokeballMovementStyle = useAnimatedStyle(() => {
-    const scale = interpolate(
-      translateY.value,
-      [SIZES.SCREEN_HEIGHT * 0.2, 0, -SIZES.SCREEN_HEIGHT],
-      [1.2, 1, 0],
-      Extrapolate.CLAMP
-    );
-    return {
-      transform: [
-        { translateX: translateX.value },
-        { translateY: translateY.value },
-        { scale: scale },
-        { rotateZ: `${pokeballRotation.value}deg` },
-      ],
-    };
-  });
-
-  const resetPokeballAndPokemon = () => {
-    translateX.value = 0;
-    translateY.value = 0;
-    translateXpokemon.value = 0;
-    scalePokemon.value = 1;
-    changeMessageDisplayed("");
-    enableGestures();
-  };
-  ////
-  // No idea why these value for opacity and transferY work. Needs investigation.
-  ////
-  const separatorOpacity = useAnimatedStyle(() => {
-    let opacity = interpolate(translateY.value, [180, 80, -250], [1, 0, 1]);
-    return { opacity };
-  });
+  const {
+    dispatch,
+    visibility,
+    isPokeballOpen,
+    messageDisplay,
+    changeMessageDisplayed,
+    pokemon,
+    resetPokeballAndPokemon,
+    pokeballMovementStyle,
+    trappingPokemonStyle,
+    separatorOpacity,
+    onGestureEvent,
+  } = CatchingLogic();
   return (
     <>
       {visibility === true && (
