@@ -25,7 +25,7 @@ Pokedex and Pokeball are operated by drag gestures thanks to PanGestureHandler.
 * Hooks: useEffect, useState, useCallback
 
 ## Videos
-https://user-images.githubusercontent.com/64642323/169338563-ccdb2a40-d905-42b1-8c50-a88575cff224.mp4
+https://user-images.githubusercontent.com/64642323/173758182-788c72c6-d086-49ab-b626-62438f0ee0f4.mp4
 
 ## Further improvments
 * The API used in the App offers much more data on each pokemon, including their attacks. It is possible in the future, to implement pokemon battles.
