@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import PokedexReanimated from "../components/Pokedex/PokedexReanimated";
 
 export interface state {
   visible: boolean;

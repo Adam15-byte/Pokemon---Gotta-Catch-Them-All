@@ -1,32 +1,20 @@
 import {
-  StyleSheet,
   Text,
   View,
   Image,
   TouchableWithoutFeedback,
 } from "react-native";
 import React, { useEffect } from "react";
-import { COLORS, FONTS, SIZES } from "../../../assets/consts/consts";
 import { PokedexLogic } from "./PokedexLogic";
-import Animated, {
-  interpolate,
-  useAnimatedGestureHandler,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-  runOnJS,
-  runOnUI,
-} from "react-native-reanimated";
+import Animated from "react-native-reanimated";
 import {
   PanGestureHandler,
-  PanGestureHandlerGestureEvent,
 } from "react-native-gesture-handler";
 import { styles } from "./PokedexStyle";
 import PokedexReanimated from "./PokedexReanimated";
 import { catchingVisibilityToTrue } from "../../features/CatchingVisibility";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../features/store";
-import { pokemonCollection } from "../../features/PokemonCollection";
 
 const Pokedex = () => {
   const { pokemon, searchingStatus, searchingRefreshed } = PokedexLogic();

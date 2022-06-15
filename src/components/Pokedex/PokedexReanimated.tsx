@@ -1,5 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useCallback } from "react";
 import Animated, {
   interpolate,
   useAnimatedGestureHandler,
@@ -8,21 +7,13 @@ import Animated, {
   withTiming,
   runOnJS,
 } from "react-native-reanimated";
-import {
-  PanGestureHandler,
-  PanGestureHandlerGestureEvent,
-} from "react-native-gesture-handler";
+import { PanGestureHandlerGestureEvent } from "react-native-gesture-handler";
 import { PokedexLogic } from "./PokedexLogic";
 import { SIZES } from "../../../assets/consts/consts";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  catchingVisibilityToTrue,
-  catchingVisibilityToFalse,
-} from "../../features/CatchingVisibility";
 import { RootState } from "../../features/store";
 
 const PokedexReanimated = () => {
-  const dispatch = useDispatch();
   const translateX = useSharedValue(0);
   const {
     getRandomPokemon,

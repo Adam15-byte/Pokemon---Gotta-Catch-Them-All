@@ -1,13 +1,11 @@
-import { Text, View, Image } from "react-native";
+
 import React, { useEffect, useState } from "react";
 import { RootState } from "../../features/store";
 import { SIZES } from "../../../assets/consts/consts";
 import { useSelector, useDispatch } from "react-redux";
-import Animated, {
+import {
   Extrapolate,
   interpolate,
-  SlideInDown,
-  SlideInUp,
   useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
@@ -18,11 +16,8 @@ import Animated, {
   withSequence,
 } from "react-native-reanimated";
 import {
-  PanGestureHandler,
   PanGestureHandlerGestureEvent,
 } from "react-native-gesture-handler";
-import MessageBox from "../MessageBox/MessageBox";
-import { catchingVisibilityToFalse } from "../../features/CatchingVisibility";
 import { addNewPokemonToCollection } from "../../features/PokemonCollection";
 
 const CatchingLogic = () => {

@@ -3,13 +3,9 @@ import React from "react";
 import Animated, {
   SlideInDown,
   SlideInUp,
-  withTiming,
-  withDecay,
-  withDelay,
 } from "react-native-reanimated";
 import {
   PanGestureHandler,
-  PanGestureHandlerGestureEvent,
 } from "react-native-gesture-handler";
 import MessageBox from "../MessageBox/MessageBox";
 import CatchingLogic from "./CatchingLogic";
@@ -17,11 +13,9 @@ import { styles } from "./CatchingStyle";
 
 const Catching = () => {
   const {
-    dispatch,
     visibility,
     isPokeballOpen,
     messageDisplay,
-    changeMessageDisplayed,
     pokemon,
     resetPokeballAndPokemon,
     pokeballMovementStyle,
