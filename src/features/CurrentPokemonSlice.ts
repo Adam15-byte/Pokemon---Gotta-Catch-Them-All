@@ -1,11 +1,32 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+interface TypeDescription {
+  name: string;
+  url: string;
+}
+
+export interface Type {
+  slot: number;
+  type: TypeDescription;
+}
+
+interface StatNameUrl {
+  name: string;
+  url: string;
+}
+
+export interface Stat {
+  base_stat: number;
+  effort: number;
+  stats: StatNameUrl;
+}
+
 export interface Pokemon {
   id: number | null;
   name: string;
   image: string;
-  stats: [] | any;
-  types: [] | any;
+  stats: Stat[];
+  types: Type[];
 }
 
 const initialState: Pokemon = {

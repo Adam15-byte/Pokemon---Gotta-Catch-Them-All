@@ -1,11 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-
-export interface Pokemon {
+import { Type, Stat } from "./CurrentPokemonSlice";
+interface Pokemon {
   id: number | null;
   name: string;
   image: string;
-  stats: [] | any;
-  types: [] | any;
+  stats: Stat[];
+  types: Type[];
 }
 export interface PokemonCollection extends Array<Pokemon> {}
 
