@@ -12,7 +12,8 @@ export const styles = StyleSheet.create({
     position: "absolute",
     width: SIZES.SCREEN_WIDTH * 0.9,
     zIndex: 2,
-    top: 30,
+    top: 0,
+    bottom: 0,
   },
   outsideContainer: {
     position: "absolute",
@@ -27,7 +28,8 @@ export const styles = StyleSheet.create({
     position: "absolute",
     width: SIZES.SCREEN_WIDTH * 0.9,
     zIndex: 300,
-    top: 30,
+    top: 0,
+    bottom: 0,
   },
   greenButtonContainer: {
     zIndex: 10,
@@ -75,7 +77,8 @@ export const styles = StyleSheet.create({
     bottom: SIZES.SCREEN_HEIGHT * 0.35,
     left: SIZES.SCREEN_WIDTH * 0.18,
     width: SIZES.SCREEN_WIDTH * 0.64,
-    height: SIZES.SCREEN_HEIGHT * 0.24,
+    height: SIZES.SCREEN_HEIGHT * 0.27,
+    paddingTop: 25,
     backgroundColor: COLORS.white,
   },
   nameContainer: {

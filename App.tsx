@@ -11,7 +11,7 @@ import { SIZES } from "./assets/consts/consts";
 import { Provider } from "react-redux";
 import { store } from "./src/features/store";
 
-export default function App() {
+export default function App () {
   type ImageBackgroundProps = DefaultImageBackground["props"] & {
     children: React.ReactNode;
   };

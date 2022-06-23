@@ -11,7 +11,9 @@ import MessageBox from "../MessageBox/MessageBox";
 import CatchingLogic from "./CatchingLogic";
 import { styles } from "./CatchingStyle";
 
-const Catching = () => {
+
+
+const Catching: React.FC = () => {
   const {
     visibility,
     isPokeballOpen,

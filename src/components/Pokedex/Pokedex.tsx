@@ -16,10 +16,9 @@ import { catchingVisibilityToTrue } from "../../features/CatchingVisibility";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../features/store";
 
-const Pokedex = () => {
+const Pokedex: React.FC = () => {
   const { pokemon, searchingStatus, searchingRefreshed } = PokedexLogic();
   const {
-    translateX,
     onGestureEvent,
     animatedFlipStyle,
     pokedexVerticalAnimation,

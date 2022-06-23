@@ -8,7 +8,12 @@ import {
 import { useDispatch } from "react-redux";
 import { setPokemonToEmpty } from "../../features/CurrentPokemonSlice";
 
-const MessageBox = ({ Message, onPress }) => {
+interface Props {
+  Message: string;
+  onPress: () => void;
+}
+
+const MessageBox: React.FC<Props> = ({ Message, onPress }) => {
   const dispatch = useDispatch();
   return (
     <View style={styles.container}>

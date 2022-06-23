@@ -7,7 +7,7 @@ import { FONTS, SIZES } from "./assets/consts/consts";
 import Pokedex from "./src/components/Pokedex/Pokedex";
 import Catching from "./src/components/Catching/Catching";
 
-const FontPreload = () => {
+const FontPreload: React.FC = () => {
   const [appIsReady, setAppIsReady] = useState<boolean>(false);
   useEffect(() => {
     async function prepare() {
